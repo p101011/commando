@@ -1,0 +1,23 @@
+MVP Criteria:
+    Generate single floor structure
+    Random size
+    Not (neccesarily) square
+    Contains appropriate doors and windows
+
+Stretch 1 Goals:
+    Different room types (kitchen, bathroom, hallways)
+
+Stretch 2 Goals:
+    Different building types
+        Warehouse
+        Suburban House
+        Apartment
+        Office Building
+    Building size appropriate for type
+        Warehouse is bigger than Apartment
+    Room types appropriate for building type
+        Warehouse doesn't have bathrooms
+
+Stretch 3 Goals:
+    Different room types for different buildings
+    Office bathroom different from apartment/house bathroom
