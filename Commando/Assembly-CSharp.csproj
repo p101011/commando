@@ -67,6 +67,10 @@
     <Compile Include="Assets\Scripts\LevelGeneration\HouseBuilder.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\IntRange.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\Room.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\Actors\Actor.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\Goals\Goal.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\MasterMind.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\UberMind.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/peter/Documents/Work Folder/Personal/Repos/p101011/commando/Commando/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
@@ -311,6 +315,7 @@
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/unity/Boo.Lang.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

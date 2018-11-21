@@ -33,16 +33,11 @@ public class HouseBuilder : MonoBehaviour
     {
         // Create the board holder.
         _boardHolder = new GameObject("BoardHolder");
-        Debug.Log("Initialized boardHolder");
 
         SetupTilesArray();
-        Debug.Log("set up tiles array");
         CreateRooms();
-        Debug.Log("generated rooms");
         SetTilesValuesForRooms();
-        Debug.Log("set room tiles");
         InstantiateTiles();
-        Debug.Log("Initialized tiles");
     }
 
 
