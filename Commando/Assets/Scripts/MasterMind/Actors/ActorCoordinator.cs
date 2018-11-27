@@ -72,7 +72,7 @@ namespace Assets.Scripts.MasterMind.Actors {
                     case Goal.GoalType.Shoot:
                         break;
                     case Goal.GoalType.OpenDoor:
-                        Tile doorTile = actor.CurrentGoal.Target[0] as Tile;
+                        BackgroundTile doorTile = actor.CurrentGoal.Target[0] as BackgroundTile;
                         float distance =
                             Vector3.Magnitude(actor.PositionVector - doorTile.Coordinates.ToVector3());
                         if (distance <= GameVariables.ActorReach) {

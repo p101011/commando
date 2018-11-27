@@ -1,38 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Assets.Scripts.Helpers;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Assets.Scripts.LevelGeneration {
 
 
-    public class Building : Location {
-
-        public Room[] Rooms;
-        public int NumRooms;
+    public class Building : Location 
+    {
+        public List<Room> Rooms;
         public int Id;
-        public Coordinates EntranceCoordinates;
-        private readonly Tile[][] _tiles;
-        public Dictionary<string, Tile> KeyTiles = new Dictionary<string, Tile>();
+        public Vector3 EntranceCoordinates;
+        public Dictionary<string, BackgroundTile> KeyTiles = new Dictionary<string, BackgroundTile>();
 
-        public Building(int numRooms, Tile[][] tiles, int id, Coordinates doorCoordinates)
+        public Building(IList<BackgroundTile[]> tiles, int id, Vector3 doorCoordinates)
         {
-            NumRooms = numRooms;
-            Rooms = new Room[numRooms];
-            _tiles = tiles;
+            Rooms = new List<Room>();
             Id = id;
             EntranceCoordinates = doorCoordinates;
 
-            CreateRooms();
+            CreateRooms(tiles);
         }
 
-        private void CreateRooms()
+        private void CreateRooms(IList<BackgroundTile[]> tiles)
         {
-
-            KeyTiles.Add("MainEntrance", GetTileAtPosition(EntranceCoordinates));
 
             Rooms[0] = new Room(HouseBuilder.RoomWidth, HouseBuilder.RoomHeight, EntranceCoordinates);
 
@@ -56,15 +47,15 @@ namespace Assets.Scripts.LevelGeneration {
 
                 for (int row = (int)addedRoom.Coordinates.X; row < addedRoom.Coordinates.X + addedRoom.RoomWidth; row++) {
                     for (int col = (int)addedRoom.Coordinates.Y; col < addedRoom.Coordinates.Y + addedRoom.RoomHeight; col++) {
-                        _tiles[row][col].Type = Tile.TileType.NoWall;
+                        tiles[row][col].Type = BackgroundTile.TileType.NoWall;
                     }
                 }
             }
         }
 
-        public Tile GetTileById(string id)
+        public BackgroundTile GetTileById(string id)
         {
-            Tile output;
+            BackgroundTile output;
 
             if (KeyTiles.TryGetValue(id, out output))
             {
@@ -75,7 +66,7 @@ namespace Assets.Scripts.LevelGeneration {
             return null;
         }
 
-        public Tile GetTileAtPosition(Coordinates coordinates) {
+        public BackgroundTile GetTileAtPosition(Coordinates coordinates) {
             int roundedX = (int)coordinates.X;
             int roundedY = (int)coordinates.Y;
             return _tiles[roundedX][roundedY];

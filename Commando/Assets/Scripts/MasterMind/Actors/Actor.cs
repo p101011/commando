@@ -86,7 +86,7 @@ namespace Assets.Scripts.MasterMind.Actors
 
         public void OpenDoor()
         {
-            Tile target = CurrentGoal.Target[0] as Tile;
+            BackgroundTile target = CurrentGoal.Target[0] as BackgroundTile;
             Debug.Assert(target != null, "target != null");
             target.OpenDoor();
             ClearGoal();

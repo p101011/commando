@@ -5,18 +5,20 @@ using UnityEngine;
 
 namespace Assets.Scripts.LevelGeneration
 {
-    public class Room : Location {
+    public class Room : Location
+    {
+        public enum RoomType
+        {
+            Foyer, LivingRoom, Bathroom, Kitchen, Office
+        }
 
-        public int RoomWidth;                     // How many tiles wide the room is.
-        public int RoomHeight;                    // How many tiles high the room is.
+        public List<Vector3> Vertices;
         public List<Room> AdjacentRooms;
 
         private readonly int[] _nextOpenSpaces = {0, 0, 0, 0};  // {N, E, S, W} offset from left tile
         
-        public Room(IntRange widthRange, IntRange heightRange, Coordinates anchor)
+        public Room(RoomType)
         {
-            RoomWidth = widthRange.Random;
-            RoomHeight = heightRange.Random;
             Coordinates = anchor;
             AdjacentRooms = new List<Room>();
         }
@@ -49,7 +51,7 @@ namespace Assets.Scripts.LevelGeneration
             return builtRoom;
         }
 
-        public Tile.TileType GetTileType(int x, int y)
+        public BackgroundTile.TileType GetTileType(int x, int y)
         {
             List<bool> walls = new List<bool> {false, false, false, false};
             if (x > Coordinates.X + RoomWidth || y > Coordinates.Y + RoomHeight || x < Coordinates.X || y < Coordinates.Y) {
@@ -62,15 +64,15 @@ namespace Assets.Scripts.LevelGeneration
             switch (walls.Count(b => b))
             {
                 case 0:
-                    return Tile.TileType.NoWall;
+                    return BackgroundTile.TileType.NoWall;
                 case 1:
-                    return Tile.TileType.Exterior;
+                    return BackgroundTile.TileType.Exterior;
                 case 2:
-                    return Tile.TileType.Exterior;
+                    return BackgroundTile.TileType.Exterior;
                 case 3:
-                    return Tile.TileType.Exterior;
+                    return BackgroundTile.TileType.Exterior;
                 default:
-                    return Tile.TileType.Exterior;
+                    return BackgroundTile.TileType.Exterior;
             }
         }
     }

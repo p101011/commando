@@ -10,10 +10,10 @@ namespace Assets.Scripts.LevelGeneration
         public List<Building> Buildings = new List<Building>();
 
         // prefabs for tiles
-        public GameObject[] NoWallTiles;
+        public GameObject[] InteriorTiles;
         public GameObject[] ExteriorTiles; // An array of exterior tile prefabs.
 
-        private Tile[][] _tiles; // A jagged array of tile types representing the board, like a grid.
+        private BackgroundTile[][] _backgroundTiles; // A jagged array of tile types representing the background
         private GameObject _boardHolder; // GameObject that acts as a container for all other tiles.
 
         private void Start()
@@ -32,17 +32,19 @@ namespace Assets.Scripts.LevelGeneration
 
         private void SetupTilesArray()
         {
+            int numTilesWide = GameVariables.XRes / GameConstants.TileSize;
+            int numTilesTall = GameVariables.YRes / GameConstants.TileSize;
             // Set the tiles jagged array to the correct width.
-            _tiles = new Tile[Columns][];
+            _backgroundTiles = new BackgroundTile[numTilesWide][];
 
             // Go through all the tile arrays...
-            for (int i = 0; i < _tiles.Length; i++)
+            for (int i = 0; i < _backgroundTiles.Length; i++)
             {
                 // ... and set each tile array is the correct height.
-                _tiles[i] = new Tile[Rows];
-                for (int j = 0; j < Rows; j++)
+                _backgroundTiles[i] = new BackgroundTile[numTilesTall];
+                for (int j = 0; j < numTilesTall; j++)
                 {
-                    _tiles[i][j] = new Tile(new Coordinates(i, j));
+                    _backgroundTiles[i][j] = new BackgroundTile();
                 }
             }
         }
@@ -52,8 +54,8 @@ namespace Assets.Scripts.LevelGeneration
             int numBuildings = NumBuildings.Random;
             for (int i = 0; i < numBuildings; i++)
             {
-                Coordinates entranceCoordinates = new Coordinates(Rows / 2, Columns / 2);
-                Buildings.Add(new Building(NumRooms.Random, _tiles, i, entranceCoordinates));
+                Vector3 entranceCoordinates = new Vector3((float) GameVariables.XRes / 2, (float) GameVariables.YRes / 2);
+                Buildings.Add(new Building(_backgroundTiles, i, entranceCoordinates));
             }
         }
 
@@ -61,17 +63,17 @@ namespace Assets.Scripts.LevelGeneration
         private void InstantiateTiles()
         {
             // Go through all the tiles in the jagged array...
-            for (int i = 0; i < _tiles.Length; i++)
+            for (int i = 0; i < _backgroundTiles.Length; i++)
             {
-                for (int j = 0; j < _tiles[i].Length; j++)
+                for (int j = 0; j < _backgroundTiles[i].Length; j++)
                 {
-                    switch (_tiles[i][j].Type)
+                    switch (_backgroundTiles[i][j].Type)
                     {
-                        case Tile.TileType.Exterior:
+                        case BackgroundTile.TileType.Exterior:
                             InstantiateFromArray(ExteriorTiles, i, j);
                             break;
-                        case Tile.TileType.NoWall:
-                            InstantiateFromArray(NoWallTiles, i, j);
+                        case BackgroundTile.TileType.Interior:
+                            InstantiateFromArray(InteriorTiles, i, j);
                             break;
                         default:
                             InstantiateFromArray(ExteriorTiles, i, j);
@@ -96,14 +98,7 @@ namespace Assets.Scripts.LevelGeneration
             tileInstance.transform.parent = _boardHolder.transform;
         }
 
-        public Tile GetTileAtPosition(Coordinates coordinates)
-        {
-            int roundedX = (int) coordinates.X;
-            int roundedY = (int) coordinates.Y;
-            return _tiles[roundedX][roundedY];
-        }
-
-        public Tile GetTile(string id)
+        public BackgroundTile GetTile(string id)
         {
             return Buildings[0].GetTileById(id);
         }

@@ -104,7 +104,7 @@ namespace Assets.Scripts.MasterMind
             switch (goal.Type)
             {
                 case Goal.GoalType.SecureBuilding:
-                    Tile goalTile = GameObject.Find("GameManager").GetComponent<HouseBuilder>().GetTile("MainEntrance");
+                    BackgroundTile goalTile = GameObject.Find("GameManager").GetComponent<HouseBuilder>().GetTile("MainEntrance");
                     subGoals.Add(new Goal(Goal.GoalType.Breach, new [] {goalTile}, goal, 0));
                     break;
                 case Goal.GoalType.SecureRoom:
@@ -116,7 +116,7 @@ namespace Assets.Scripts.MasterMind
                     subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, rightSweepPath, goal, 0));
                     break;
                 case Goal.GoalType.Breach:
-                    Tile targetTile = goal.Target[0] as Tile;
+                    BackgroundTile targetTile = goal.Target[0] as BackgroundTile;
                     System.Diagnostics.Debug.Assert(targetTile != null, "targetTile != null");
                     Coordinates leftSide = targetTile.Coordinates.Add(-0.3, -0.56);
                     Coordinates rightSide0 = targetTile.Coordinates.Add(0.3, -0.56);

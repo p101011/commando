@@ -62,32 +62,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Helpers\Coordinates.cs" />
     <Compile Include="Assets\Scripts\Helpers\GameConstants.cs" />
     <Compile Include="Assets\Scripts\Helpers\GameVariables.cs" />
     <Compile Include="Assets\Scripts\Helpers\Logger.cs" />
+    <Compile Include="Assets\Scripts\LevelGeneration\BackgroundTile.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\Building.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\HouseBuilder.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\IntRange.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\Location.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\Room.cs" />
-    <Compile Include="Assets\Scripts\LevelGeneration\Tile.cs" />
+    <Compile Include="Assets\Scripts\LevelGeneration\RoomTemplates.cs" />
     <Compile Include="Assets\Scripts\MasterMind\Actors\Actor.cs" />
     <Compile Include="Assets\Scripts\MasterMind\Actors\ActorCoordinator.cs" />
     <Compile Include="Assets\Scripts\MasterMind\Goals\Goal.cs" />
     <Compile Include="Assets\Scripts\MasterMind\MasterMind.cs" />
     <Compile Include="Assets\Scripts\MasterMind\UberMind.cs" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/peter/Documents/Work Folder/Personal/Repos/p101011/commando/Commando/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>D:/Repos/p101011/commando/Commando/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/peter/Documents/Work Folder/Personal/Repos/p101011/commando/Commando/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/Repos/p101011/commando/Commando/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/peter/Documents/Work Folder/Personal/Repos/p101011/commando/Commando/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>D:/Repos/p101011/commando/Commando/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/peter/Documents/Work Folder/Personal/Repos/p101011/commando/Commando/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/Repos/p101011/commando/Commando/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
