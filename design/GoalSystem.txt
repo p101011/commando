@@ -1,0 +1,10 @@
+Life Cycle of a Goal:
+    Creation
+        Prioritize
+        Decompose
+    Execution
+        Assign
+        Evaluate Progress
+    Completion
+        Evaluate Parent Goal Status
+        Cleanup
