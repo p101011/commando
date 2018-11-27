@@ -162,7 +162,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 3
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -244,12 +244,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoWallTiles:
   - {fileID: 1675892640501756, guid: 688c39d04bd2de440b4f742815133d78, type: 2}
-  OneWallTiles:
-  - {fileID: 1297146190871744, guid: af75fa65fe63bea45919d50a8f35c7ec, type: 2}
-  TwoWallTiles:
-  - {fileID: 1629863228646016, guid: cc4ffca69d8d2df40ba6b9dc18bf7e6f, type: 2}
-  ThreeWallTiles:
-  - {fileID: 1553282109156534, guid: ee6862472d2af6146b768fcbccc49f49, type: 2}
   ExteriorTiles:
   - {fileID: 1025576579660868, guid: eebb51dfcec41dd4dbce248c71943844, type: 2}
 --- !u!114 &658748930

@@ -97,16 +97,16 @@ namespace Assets.Scripts.MasterMind.Actors
         {
             if (!_goalFacing.Equals(Facing))
             {
-                Facing = Quaternion.RotateTowards(Facing, _goalFacing, GameSettings.ActorRotateSpeed * deltaTime);
+                Facing = Quaternion.RotateTowards(Facing, _goalFacing, GameVariables.ActorRotateSpeed * deltaTime);
             }
 
 //            Vector3 stepVector = _facing * new Vector3(0, GameSettings.ActorMoveSpeed * deltaTime, 0);
             PositionVector = Vector3.MoveTowards(PositionVector, _goalPositionVector,
-                GameSettings.ActorMoveSpeed * deltaTime);
+                GameVariables.ActorMoveSpeed * deltaTime);
 //            _positionVector += stepVector;
             Instance.transform.rotation = Facing;
             Instance.transform.position = PositionVector;
-            if ((PositionVector - _goalPositionVector).sqrMagnitude < GameSettings.Tolerance * GameSettings.Tolerance)
+            if ((PositionVector - _goalPositionVector).sqrMagnitude < GameVariables.Tolerance * GameVariables.Tolerance)
             {
                 ClearGoal();
             }

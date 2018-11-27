@@ -75,7 +75,7 @@ namespace Assets.Scripts.MasterMind.Actors {
                         Tile doorTile = actor.CurrentGoal.Target[0] as Tile;
                         float distance =
                             Vector3.Magnitude(actor.PositionVector - doorTile.Coordinates.ToVector3());
-                        if (distance <= GameSettings.ActorReach) {
+                        if (distance <= GameVariables.ActorReach) {
                             actor.OpenDoor();
                         } else
                         {

@@ -6,13 +6,7 @@ namespace Assets.Scripts.LevelGeneration
 {
     public class HouseBuilder : MonoBehaviour
     {
-
-        public static int Columns = 25; // The number of columns on the board(how wide it will be).
-        public static int Rows = 25; // The number of rows on the board(how tall it will be).
-        public static IntRange NumRooms = new IntRange(4, 5); // The range of the number of rooms there can be.
         public static IntRange NumBuildings = new IntRange(1, 1);
-        public static IntRange RoomWidth = new IntRange(3, 6); // The range of widths rooms can have.
-        public static IntRange RoomHeight = new IntRange(3, 6); // The range of heights rooms can have.
         public List<Building> Buildings = new List<Building>();
 
         // prefabs for tiles
@@ -24,6 +18,10 @@ namespace Assets.Scripts.LevelGeneration
 
         private void Start()
         {
+            //todo: use room prefabs rather than full random
+            //todo: dynamically build walls after rooms picked
+            //todo: use GameVariables.X/YRes to figure out the size of our board
+
             // Create the board holder.
             _boardHolder = new GameObject("BoardHolder");
             SetupTilesArray();
@@ -54,8 +52,8 @@ namespace Assets.Scripts.LevelGeneration
             int numBuildings = NumBuildings.Random;
             for (int i = 0; i < numBuildings; i++)
             {
-                Coordinates entranCoordinates = new Coordinates(Rows / 2, Columns / 2);
-                Buildings.Add(new Building(NumRooms.Random, _tiles, i, entranCoordinates));
+                Coordinates entranceCoordinates = new Coordinates(Rows / 2, Columns / 2);
+                Buildings.Add(new Building(NumRooms.Random, _tiles, i, entranceCoordinates));
             }
         }
 
