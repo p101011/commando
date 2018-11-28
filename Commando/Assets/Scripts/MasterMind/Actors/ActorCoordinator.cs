@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Assets.Scripts.Helpers;
 using Assets.Scripts.LevelGeneration;
 using Assets.Scripts.MasterMind.Goals;
@@ -58,7 +56,7 @@ namespace Assets.Scripts.MasterMind.Actors {
                         List<Location> path = actor.CurrentGoal.Target;
                         Goal parent = actor.CurrentGoal.Parent;
                         Goal waypoint = new Goal(Goal.GoalType.Move, new[] { path[0].Coordinates }, parent);
-                        List<Coordinates> restCoordinates = new List<Coordinates>(path.Count - 1);
+                        List<Vector3> restCoordinates = new List<Vector3>(path.Count - 1);
                         for (int i = 1; i < path.Count; i++) {
                             restCoordinates.Add(path[i].Coordinates);
                         }
@@ -74,7 +72,7 @@ namespace Assets.Scripts.MasterMind.Actors {
                     case Goal.GoalType.OpenDoor:
                         BackgroundTile doorTile = actor.CurrentGoal.Target[0] as BackgroundTile;
                         float distance =
-                            Vector3.Magnitude(actor.PositionVector - doorTile.Coordinates.ToVector3());
+                            Vector3.Magnitude(actor.PositionVector - doorTile.Coordinates);
                         if (distance <= GameVariables.ActorReach) {
                             actor.OpenDoor();
                         } else

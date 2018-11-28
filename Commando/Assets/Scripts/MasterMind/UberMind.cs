@@ -17,10 +17,10 @@ namespace Assets.Scripts.MasterMind
         public List<MasterMind> Controllers = new List<MasterMind>();
         public GameObject[][] TroopContainer;
 
-        public Coordinates[] CommandoSpawnPoints = { new Coordinates(0, 0), new Coordinates(0, 1),
-                                                     new Coordinates( 1, 0), new Coordinates(1, 1) };
-        public Coordinates[] RebelSpawnPoints = { new Coordinates(10, 10), new Coordinates(10, 11),
-                                                  new Coordinates( 11, 10), new Coordinates(11, 11) };
+        public Vector3[] CommandoSpawnPoints = { new Vector3(0, 0), new Vector3(0, 1),
+                                                     new Vector3( 1, 0), new Vector3(1, 1) };
+        public Vector3[] RebelSpawnPoints = { new Vector3(10, 10), new Vector3(10, 11),
+                                                  new Vector3( 11, 10), new Vector3(11, 11) };
 
         public GameObject[] CommandoPrefabs;
         public GameObject[] RebelPrefabs;
@@ -59,10 +59,10 @@ namespace Assets.Scripts.MasterMind
             }
         }
 
-        private static Vector3 GetSpawnPointVector(int i, IList<Coordinates> options) {
+        private static Vector3 GetSpawnPointVector(int i, IList<Vector3> options) {
             i %= options.Count;
-            Coordinates selection = options[i];
-            return new Vector3((float)selection.X, (float)selection.Y);
+            Vector3 selection = options[i];
+            return selection;
         }
 
         private void SetupTroopContainer()

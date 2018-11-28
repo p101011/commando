@@ -15,7 +15,7 @@ namespace Assets.Scripts.MasterMind.Actors
         public Goal CurrentGoal;
         public List<Goal> NextGoals = new List<Goal>();
         public bool IsIdle = true;
-        public Coordinates Coordinates;
+        public Vector3 Coordinates;
         public GameObject Instance;
         public ActorCoordinator Owner;
 
@@ -26,7 +26,7 @@ namespace Assets.Scripts.MasterMind.Actors
 
         public Actor(Vector3 startPosition, GameObject i)
         {
-            Coordinates = new Coordinates(startPosition.x, startPosition.y);
+            Coordinates = startPosition;
             PositionVector = startPosition;
             Instance = i;
         }
@@ -46,7 +46,7 @@ namespace Assets.Scripts.MasterMind.Actors
                     break;
                 case Goal.GoalType.MoveWaypoint:
                 case Goal.GoalType.Move:
-                    _goalPositionVector = new Vector3((float) newGoal.Target[0].Coordinates.X, (float) newGoal.Target[0].Coordinates.Y);
+                    _goalPositionVector = new Vector3((float) newGoal.Target[0].Coordinates.x, (float) newGoal.Target[0].Coordinates.y);
 //                    float angleBetween = Vector3.Angle(_positionVector, _goalPositionVector);
                     _goalFacing = Quaternion.FromToRotation(PositionVector, _goalPositionVector);
                     break;
@@ -88,7 +88,6 @@ namespace Assets.Scripts.MasterMind.Actors
         {
             BackgroundTile target = CurrentGoal.Target[0] as BackgroundTile;
             Debug.Assert(target != null, "target != null");
-            target.OpenDoor();
             ClearGoal();
             UnityEngine.Debug.Log("Breaching!");
         }

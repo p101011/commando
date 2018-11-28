@@ -29,9 +29,9 @@ namespace Assets.Scripts.MasterMind.Goals
             Parent = parent;
         }
 
-        public Goal(GoalType type, IEnumerable<Coordinates> coordinates, Goal parent, int priorityMod = 0) : this (type, priorityMod, parent)
+        public Goal(GoalType type, IEnumerable<Vector3> coordinates, Goal parent, int priorityMod = 0) : this (type, priorityMod, parent)
         {
-            foreach (Coordinates c in coordinates)
+            foreach (Vector3 c in coordinates)
             {
                 Target.Add(new Location(c));
             }
