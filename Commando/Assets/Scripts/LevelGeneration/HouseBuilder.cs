@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Assets.Scripts.Geometry;
 using Assets.Scripts.Helpers;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -16,34 +17,51 @@ namespace Assets.Scripts.LevelGeneration
         public GameObject[] InteriorTiles;
         public GameObject[] ExteriorTiles; // An array of exterior tile prefabs.
         private GameObject _boardHolder; // GameObject that acts as a container for all other tiles.
+        private GameObject _wallHolder;
+        private GameObject _floorHolder;
 
         [UsedImplicitly]
         private void Start()
         {
-            //todo: use room prefabs rather than full random
-            //todo: dynamically build walls after rooms picked
-            //todo: use GameVariables.X/YRes to figure out the size of our board
 
             // Create the board holder.
             _boardHolder = new GameObject("BoardHolder");
+            _wallHolder = new GameObject("WallHolder");
+            _floorHolder = new GameObject("FloorHolder");
             CreateBuildings();
             InstantiateBackgroundTiles();
-//            InstantiateBuildingFloor();
-//            InstantiateWalls();
+            InstantiateWalls();
+            InstantiateBuildingFloor();
         }
 
         private void InstantiateWalls()
         {
-            throw new System.NotImplementedException();
-            foreach (Building b in Buildings) {
+            foreach (Building b in Buildings) 
+            {
+                foreach (Room r in b.Rooms)
+                {
+                    foreach (Edge e in r.BoundingPolygon.Edges)
+                    {
+                        DrawLine(e.V1, e.V2, GameConstants.WallColor, GameConstants.WallThickness);
+                    }
+                }
             }
         }
 
         private void InstantiateBuildingFloor()
         {
-            throw new NotImplementedException();
             foreach (Building b in Buildings)
             {
+                Polygon floorBounds = b.BoundingPolygon;
+                for (float x = floorBounds.MinX; x < floorBounds.MaxX; x += GameConstants.TileSize)
+                {
+                    for (float y = floorBounds.MinY; y < floorBounds.MaxY; y += GameConstants.TileSize) {
+                        int randomIndex = Random.Range(0, InteriorTiles.Length);
+                        Vector3 position = new Vector3(x, y);
+                        GameObject tileInstance = Instantiate(InteriorTiles[randomIndex], position, Quaternion.identity);
+                        tileInstance.transform.parent = _floorHolder.transform;
+                    }
+                }
             }
         }
 
@@ -57,13 +75,14 @@ namespace Assets.Scripts.LevelGeneration
             }
         }
 
+        [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         private void InstantiateBackgroundTiles()
         {
-            for (int i = 0; i <= GameVariables.XRes / GameConstants.TileSize; i++)
+            for (int i = 0; i <= Mathf.CeilToInt(GameVariables.XRes / GameConstants.TileSize); i++)
             {
-                for (int j = 0; j <= GameVariables.YRes / GameConstants.TileSize; j++) {
+                for (int j = 0; j <= Mathf.CeilToInt(GameVariables.YRes / GameConstants.TileSize); j++) {
                     int randomIndex = Random.Range(0, ExteriorTiles.Length);
-                    Vector3 position = new Vector3(i, j, 0f);
+                    Vector3 position = new Vector3(i * GameConstants.TileSize, j * GameConstants.TileSize, 0f);
                     GameObject tileInstance = Instantiate(ExteriorTiles[randomIndex], position, Quaternion.identity);
                     tileInstance.transform.parent = _boardHolder.transform;
                 }
@@ -73,6 +92,24 @@ namespace Assets.Scripts.LevelGeneration
         public Vector3 GetCoordinates(string identifier)
         {
             return new Vector3();
+        }
+
+        private void DrawLine(Vector3 start, Vector3 end, Color color, float width)
+        {
+            GameObject myLine = new GameObject("Wall");
+            myLine.transform.parent = _wallHolder.transform;
+            myLine.transform.position = start;
+            myLine.AddComponent<LineRenderer>();
+            LineRenderer lr = myLine.GetComponent<LineRenderer>();
+            lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+            lr.startColor = color;
+            lr.endColor = color;
+            lr.startWidth = width;
+            lr.endWidth = width;
+            lr.SetPosition(0, start);
+            lr.SetPosition(1, end);
+            lr.sortingLayerName = "Foreground";
+            lr.sortingOrder = 5;
         }
     }
 }

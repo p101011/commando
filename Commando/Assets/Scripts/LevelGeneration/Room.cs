@@ -10,7 +10,7 @@ namespace Assets.Scripts.LevelGeneration
     {
         public enum RoomType
         {
-            Foyer, LivingRoom, Bathroom, Kitchen, Office
+            Foyer, LivingRoom, Bathroom, Kitchen, Bedroom
         }
 
         public Polygon BoundingPolygon;
@@ -28,7 +28,7 @@ namespace Assets.Scripts.LevelGeneration
             Coordinates = BoundingPolygon.Center;
 
             foreach (PointOfInterest poi in KeyPoints) {
-                if (poi.Type == PointOfInterest.PoIType.Door) AvailableDoors.Add(poi);
+                if (poi.Type == PointOfInterest.PoIType.Door && poi.Available) AvailableDoors.Add(poi);
             }
         }
         

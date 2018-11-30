@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets.Scripts.Geometry;
-using Assets.Scripts.Helpers;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -47,12 +46,10 @@ namespace Assets.Scripts.LevelGeneration {
                     bool exhaustedTemplates = false;
                     bool templateValid = false;
                     bool firstTry = true;
-                    RoomTemplate template = null;
+                    Room newRoom = null;
                     while (!templateValid && !exhaustedTemplates)
                     {
-                        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                        // bad ReSharper
-                        template = RoomTemplate.GetRoomTemplate(type, 1, firstTry);
+                        RoomTemplate template = RoomTemplate.GetRoomTemplate(type, 1, firstTry);
                         firstTry = false;
                         if (template == null)
                         {
@@ -63,8 +60,8 @@ namespace Assets.Scripts.LevelGeneration {
                         else 
                         {
                             int newRoomDoorIndex = 0;
-                            Room tempRoom = new Room(template);
-                            while (newRoomDoorIndex < tempRoom.AvailableDoors.Count && !templateValid)
+                            newRoom = new Room(template);
+                            while (newRoomDoorIndex < newRoom.AvailableDoors.Count && !templateValid)
                             {
                                 int doorFacing;
                                 switch (door.Direction) {
@@ -84,11 +81,11 @@ namespace Assets.Scripts.LevelGeneration {
                                         throw new ArgumentOutOfRangeException();
                                 }
                                 int rotation = (90 * doorFacing) + 180;
-                                tempRoom.Rotate(rotation);
-                                PointOfInterest tempDoor = tempRoom.AvailableDoors[newRoomDoorIndex];
+                                newRoom.Rotate(rotation);
+                                PointOfInterest tempDoor = newRoom.AvailableDoors[newRoomDoorIndex];
                                 Vector3 translation = tempDoor.Coordinates - door.Coordinates;
-                                tempRoom.Translate(translation);
-                                if (!BoundingPolygon.Intersects(tempRoom.BoundingPolygon))
+                                newRoom.Translate(translation);
+                                if (!BoundingPolygon.Intersects(newRoom.BoundingPolygon))
                                     templateValid = true;
                                 else
                                 {
@@ -99,12 +96,10 @@ namespace Assets.Scripts.LevelGeneration {
                     }
 
                     if (!templateValid) continue;
-
-                    //todo: need to modify template coords to reflect actual position/rotation of room
-                    Room newRoom = new Room(template);
+                    
                     currentRoom.AdjacentRooms.Add(newRoom);
                     Rooms.Add(newRoom);
-                    roomsToBuild.RemoveAt(0);
+                    roomsToBuild.Add(newRoom);
                     BoundingPolygon = new Polygon(BoundingPolygon, newRoom.BoundingPolygon);
                 }
             }

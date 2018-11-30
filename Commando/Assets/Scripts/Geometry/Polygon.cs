@@ -7,6 +7,10 @@ namespace Assets.Scripts.Geometry
     {
         public List<Vector3> Vertices;
         public List<Edge> Edges;
+        public float MinX;
+        public float MinY;
+        public float MaxX;
+        public float MaxY;
         public Vector3 Center;
 
         public Polygon(List<Edge> edges)
@@ -22,12 +26,38 @@ namespace Assets.Scripts.Geometry
                     Vertices.Add(e.V1);
                     avgX += e.V1.x;
                     avgY += e.V1.y;
+                    if (MinX > e.V1.x)
+                    {
+                        MinX = e.V1.x;
+                    }
+                    else if (MaxX < e.V1.x)
+                    {
+                        MaxX = e.V1.x;
+                    }
+                    if (MinY > e.V1.y) {
+                        MinY = e.V1.y;
+                    }
+                    else if (MaxY < e.V1.y) {
+                        MaxY = e.V1.y;
+                    }
                 }
 
                 if (Vertices.Contains(e.V2)) continue;
                 Vertices.Add(e.V2);
                 avgX += e.V2.x;
                 avgY += e.V2.y;
+                if (MinX > e.V2.x) {
+                    MinX = e.V2.x;
+                }
+                else if (MaxX < e.V2.x) {
+                    MaxX = e.V2.x;
+                }
+                if (MinY > e.V2.y) {
+                    MinY = e.V2.y;
+                }
+                else if (MaxY < e.V2.y) {
+                    MaxY = e.V2.y;
+                }
             }
 
             avgY /= Vertices.Count;
@@ -40,6 +70,10 @@ namespace Assets.Scripts.Geometry
             Vertices = new List<Vector3>(other.Vertices);
             Edges = new List<Edge>(other.Edges);
             Center = new Vector3(other.Center.x, other.Center.y);
+            MinX = other.MinX;
+            MinY = other.MinY;
+            MaxX = other.MaxX;
+            MaxY = other.MaxY;
         }
 
         public Polygon(Polygon a, Polygon b)
@@ -82,6 +116,10 @@ namespace Assets.Scripts.Geometry
             avgY /= Vertices.Count;
             avgX /= Vertices.Count;
             Center = new Vector3(avgX, avgY);
+            MinX = Mathf.Min(a.MinX, b.MinX);
+            MinY = Mathf.Min(a.MinY, b.MinY);
+            MaxX = Mathf.Min(a.MaxX, b.MaxX);
+            MaxY = Mathf.Min(a.MaxY, b.MaxY);
         }
 
         public bool Intersects(Polygon other)
