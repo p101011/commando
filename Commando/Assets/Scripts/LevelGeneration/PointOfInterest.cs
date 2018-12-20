@@ -19,12 +19,14 @@ namespace Assets.Scripts.LevelGeneration {
 
         public PoIType Type;
         public Facing Direction;
+        public bool Available;
 
-        public PointOfInterest(PoIType type, Facing direction, Vector3 coordinates)
+        public PointOfInterest(PoIType type, Facing direction, bool available, Vector3 coordinates)
         {
             Type = type;
             Coordinates = coordinates;
             Direction = direction;
+            Available = available;
         }
     }
 }
