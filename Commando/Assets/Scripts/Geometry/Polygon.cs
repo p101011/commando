@@ -170,6 +170,7 @@ namespace Assets.Scripts.Geometry
                            Center.y;
             }
             foreach (Edge e in Edges) {
+                Debug.Log($"Edge before rotating {angle} degrees: {e}");
                 Vector3 vertex = e.V1;
                 vertex.x = Mathf.Cos(radians) * (vertex.x - Center.x) - Mathf.Sin(radians) * (vertex.y - Center.y) +
                            Center.x;
@@ -180,6 +181,7 @@ namespace Assets.Scripts.Geometry
                            Center.x;
                 vertex.y = Mathf.Sin(radians) * (vertex.x - Center.x) - Mathf.Cos(radians) * (vertex.y - Center.y) +
                            Center.y;
+                Debug.Log($"Edge after rotating {angle} degrees: {e}");
             }
         }
 

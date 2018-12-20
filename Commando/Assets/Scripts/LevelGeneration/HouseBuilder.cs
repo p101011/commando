@@ -4,6 +4,7 @@ using Assets.Scripts.Geometry;
 using Assets.Scripts.Helpers;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.LevelGeneration
@@ -28,10 +29,11 @@ namespace Assets.Scripts.LevelGeneration
             _boardHolder = new GameObject("BoardHolder");
             _wallHolder = new GameObject("WallHolder");
             _floorHolder = new GameObject("FloorHolder");
-            CreateBuildings();
-            InstantiateBackgroundTiles();
-            InstantiateWalls();
-            InstantiateBuildingFloor();
+            TestRoomRotation();
+//            CreateBuildings();
+//            InstantiateBackgroundTiles();
+//            InstantiateWalls();
+//            InstantiateBuildingFloor();
         }
 
         private void InstantiateWalls()
@@ -110,6 +112,28 @@ namespace Assets.Scripts.LevelGeneration
             lr.SetPosition(1, end);
             lr.sortingLayerName = "Foreground";
             lr.sortingOrder = 5;
+        }
+
+        private static void TestRoomRotation()
+        {
+            Vector3 ll = new Vector3(0, 0);
+            Vector3 lr = new Vector3(1, 0);
+            Vector3 ul = new Vector3(0, 1);
+            Vector3 ur = new Vector3(1, 1);
+            List<Edge> testEdges =
+                new List<Edge> {new Edge(ll, lr), new Edge(lr, ur), new Edge(ur, ul), new Edge(ul, ll)};
+            List<PointOfInterest> testPoints = new List<PointOfInterest> { new PointOfInterest(PointOfInterest.PoIType.Door, PointOfInterest.Facing.South, true, new Vector3(.5f, 0)) };
+            RoomTemplate testTemplate = new RoomTemplate(testEdges.ToArray(), testPoints);
+            Room testRoom = new Room(testTemplate);
+            List<Edge> expectedEdges =
+                new List<Edge> { new Edge(ur, ul), new Edge(ul, lr), new Edge(ll, lr), new Edge(lr, ur) };
+            List<PointOfInterest> expectedPoints = new List<PointOfInterest> { new PointOfInterest(PointOfInterest.PoIType.Door, PointOfInterest.Facing.North, true, new Vector3(.5f, 1)) };
+            testRoom.Rotate(180);
+            for (int i = 0; i < 4; i++)
+            {
+                Assert.IsTrue(testRoom.BoundingPolygon.Edges[i] == expectedEdges[i], "Edge rotated improperly, expected " + expectedEdges[i] + " got " + testRoom.BoundingPolygon.Edges[i]);
+            }
+            Assert.IsTrue(expectedPoints[0].Coordinates == testRoom.KeyPoints[0].Coordinates, "Keypoint Rotated improperly, expected " + expectedPoints[0].Coordinates + " got " + testRoom.KeyPoints[0].Coordinates);
         }
     }
 }
