@@ -4,6 +4,7 @@
       "NumDoors": "0",
       "Templates": [
         {
+          "DoorScale": "128",
           "Edges": [
             [
               [ "-88", "0" ],
@@ -71,6 +72,7 @@
       "NumDoors": "1",
       "Templates": [
         {
+          "DoorScale": "128",
           "Edges": [
             [
               [ "236", "480" ],
@@ -106,6 +108,7 @@
       "NumDoors": "1",
       "Templates": [
         {
+          "DoorScale": "128",
           "Edges": [
             [
               [ "365", "885" ],
@@ -161,6 +164,7 @@
       "NumDoors": "1",
       "Templates": [
         {
+          "DoorScale": "128",
           "Edges": [
             [
               [ "-182", "210" ],
@@ -196,6 +200,7 @@
       "NumDoors": "1",
       "Templates": [
         {
+          "DoorScale": "128",
           "Edges": [
             [
               [ "485", "0" ],

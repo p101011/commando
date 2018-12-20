@@ -30,10 +30,10 @@ namespace Assets.Scripts.LevelGeneration
             _wallHolder = new GameObject("WallHolder");
             _floorHolder = new GameObject("FloorHolder");
             TestRoomRotation();
-//            CreateBuildings();
-//            InstantiateBackgroundTiles();
-//            InstantiateWalls();
-//            InstantiateBuildingFloor();
+            CreateBuildings();
+            InstantiateBackgroundTiles();
+            InstantiateWalls();
+            InstantiateBuildingFloor();
         }
 
         private void InstantiateWalls()
@@ -126,12 +126,12 @@ namespace Assets.Scripts.LevelGeneration
             RoomTemplate testTemplate = new RoomTemplate(testEdges.ToArray(), testPoints);
             Room testRoom = new Room(testTemplate);
             List<Edge> expectedEdges =
-                new List<Edge> { new Edge(ur, ul), new Edge(ul, lr), new Edge(ll, lr), new Edge(lr, ur) };
+                new List<Edge> { new Edge(ur, ul), new Edge(ul, ll), new Edge(ll, lr), new Edge(lr, ur) };
             List<PointOfInterest> expectedPoints = new List<PointOfInterest> { new PointOfInterest(PointOfInterest.PoIType.Door, PointOfInterest.Facing.North, true, new Vector3(.5f, 1)) };
             testRoom.Rotate(180);
             for (int i = 0; i < 4; i++)
             {
-                Assert.IsTrue(testRoom.BoundingPolygon.Edges[i] == expectedEdges[i], "Edge rotated improperly, expected " + expectedEdges[i] + " got " + testRoom.BoundingPolygon.Edges[i]);
+                Assert.IsTrue(testRoom.BoundingPolygon.Edges[i] == expectedEdges[i], $"Edge rotated improperly, expected {expectedEdges[i]} got {testRoom.BoundingPolygon.Edges[i]}");
             }
             Assert.IsTrue(expectedPoints[0].Coordinates == testRoom.KeyPoints[0].Coordinates, "Keypoint Rotated improperly, expected " + expectedPoints[0].Coordinates + " got " + testRoom.KeyPoints[0].Coordinates);
         }

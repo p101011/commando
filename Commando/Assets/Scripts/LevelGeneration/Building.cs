@@ -15,6 +15,9 @@ namespace Assets.Scripts.LevelGeneration {
         public List<Vector3> EntranceCoordinates;
         public Polygon BoundingPolygon;
 
+
+        private readonly List<Room> _roomsToBuild = new List<Room>();
+
         public Building(int id, Vector3 doorCoordinates)
         {
             Rooms = new List<Room>();
@@ -30,79 +33,70 @@ namespace Assets.Scripts.LevelGeneration {
             Room currentRoom = new Room(Room.RoomType.Foyer, 0);
             currentRoom.Translate(EntranceCoordinates[0]);
             Rooms.Add(currentRoom);
-            List<Room> roomsToBuild = new List<Room>{currentRoom};
+            _roomsToBuild.Add(currentRoom);
             BoundingPolygon = new Polygon(currentRoom.BoundingPolygon);
-            while (roomsToBuild.Count > 0)
+            while (_roomsToBuild.Count > 0)
             {
-                currentRoom = roomsToBuild[0];
-                roomsToBuild.RemoveAt(0);
-
-                while (currentRoom.AvailableDoors.Count > 0)
-                {
-                    PointOfInterest door = currentRoom.AvailableDoors[0];
-                    // get random type of room excluding foyers
-                    Room.RoomType type = (Room.RoomType) Random.Range(1, Enum.GetValues(typeof(Room.RoomType)).Length);
-                    currentRoom.AvailableDoors.RemoveAt(0);
-                    bool exhaustedTemplates = false;
-                    bool templateValid = false;
-                    bool firstTry = true;
-                    Room newRoom = null;
-                    while (!templateValid && !exhaustedTemplates)
-                    {
-                        RoomTemplate template = RoomTemplate.GetRoomTemplate(type, 1, firstTry);
-                        firstTry = false;
-                        if (template == null)
-                        {
-                            Debug.Log("Failed to find an appropriate RoomTemplate");
-                            exhaustedTemplates = true;
-                            EntranceCoordinates.Add(door.Coordinates);
-                        }
-                        else 
-                        {
-                            int newRoomDoorIndex = 0;
-                            newRoom = new Room(template);
-                            while (newRoomDoorIndex < newRoom.AvailableDoors.Count && !templateValid)
-                            {
-                                int doorFacing;
-                                switch (door.Direction) {
-                                    case PointOfInterest.Facing.North:
-                                        doorFacing = (int) PointOfInterest.Facing.South;
-                                        break;
-                                    case PointOfInterest.Facing.East:
-                                        doorFacing = (int)PointOfInterest.Facing.West;
-                                        break;
-                                    case PointOfInterest.Facing.South:
-                                        doorFacing = (int)PointOfInterest.Facing.North;
-                                        break;
-                                    case PointOfInterest.Facing.West:
-                                        doorFacing = (int)PointOfInterest.Facing.East;
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
-                                int rotation = (90 * doorFacing) + 180;
-                                newRoom.Rotate(rotation);
-                                PointOfInterest tempDoor = newRoom.AvailableDoors[newRoomDoorIndex];
-                                Vector3 translation = tempDoor.Coordinates - door.Coordinates;
-                                newRoom.Translate(translation);
-                                if (!BoundingPolygon.Intersects(newRoom.BoundingPolygon))
-                                    templateValid = true;
-                                else
-                                {
-                                    newRoomDoorIndex ++;
-                                }
-                            }
-                        }
-                    }
-
-                    if (!templateValid) continue;
-                    
-                    currentRoom.AdjacentRooms.Add(newRoom);
-                    Rooms.Add(newRoom);
-                    roomsToBuild.Add(newRoom);
-                    BoundingPolygon = new Polygon(BoundingPolygon, newRoom.BoundingPolygon);
-                }
+                currentRoom = _roomsToBuild[0];
+                BuildNewRoom(currentRoom);
+                _roomsToBuild.RemoveAt(0);
             }
+        }
+
+        private void BuildNewRoom(Room seedRoom)
+        {
+            while (seedRoom.AvailableDoors.Count > 0)
+            {
+                int randIndex = Random.Range(0, seedRoom.AvailableDoors.Count);
+                PointOfInterest door = seedRoom.AvailableDoors[randIndex];
+                // get random type of room excluding foyers
+                Room.RoomType type = (Room.RoomType)Random.Range(1, Enum.GetValues(typeof(Room.RoomType)).Length);
+                seedRoom.AvailableDoors.RemoveAt(randIndex);
+                bool exhaustedTemplates = false;
+                bool templateValid = false;
+                bool firstTry = true;
+                Room newRoom = null;
+                while (!templateValid && !exhaustedTemplates) {
+                    RoomTemplate template = RoomTemplate.GetRoomTemplate(type, 1, firstTry);
+                    firstTry = false;
+                    if (template == null) {
+                        Debug.Log("Failed to find an appropriate RoomTemplate");
+                        exhaustedTemplates = true;
+                        EntranceCoordinates.Add(door.Coordinates);
+                    }
+                    else {
+                        newRoom = new Room(template);
+                        templateValid = TryFitNewRoom(newRoom, door);
+                    }
+                }
+
+                if (!templateValid) continue;
+
+                seedRoom.AdjacentRooms.Add(newRoom);
+                Rooms.Add(newRoom);
+                _roomsToBuild.Add(newRoom);
+                BoundingPolygon = new Polygon(BoundingPolygon, newRoom.BoundingPolygon);
+            }
+        }
+
+        private bool TryFitNewRoom(Room testRoom, PointOfInterest door)
+        {
+            int newRoomDoorIndex = 0;
+            while (newRoomDoorIndex < testRoom.AvailableDoors.Count) {
+                PointOfInterest tempDoor = testRoom.AvailableDoors[newRoomDoorIndex];
+                int rotation = (90 * (int) door.Direction + 90 * (int) tempDoor.Direction) % 360;
+                testRoom.Rotate(rotation);
+                Vector3 translation = tempDoor.Coordinates - door.Coordinates;
+                testRoom.Translate(translation);
+                if (!BoundingPolygon.Intersects(testRoom.BoundingPolygon))
+                    return true;
+                // room didn't fit this way, undo our changes
+                testRoom.Rotate(-rotation);
+                testRoom.Translate(-translation);
+                newRoomDoorIndex++;
+            }
+
+            return false;
         }
     }
 }

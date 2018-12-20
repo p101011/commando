@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Geometry
@@ -160,37 +161,35 @@ namespace Assets.Scripts.Geometry
         public void Rotate(int angle)
         {
             float radians = Mathf.Deg2Rad * angle;
-            foreach (Vector3 t in Vertices)
+            float cos = Mathf.Cos(radians);
+            float sin = Mathf.Sin(radians);
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                Vector3 vertex = t;
                 // rotation pivot will be from center
-                vertex.x = Mathf.Cos(radians) * (vertex.x - Center.x) - Mathf.Sin(radians) * (vertex.y - Center.y) +
-                           Center.x;
-                vertex.y = Mathf.Sin(radians) * (vertex.x - Center.x) - Mathf.Cos(radians) * (vertex.y - Center.y) +
-                           Center.y;
+
+                float newX = cos * (Vertices[i].x - Center.x) - sin * (Vertices[i].y - Center.y) +
+                             Center.x;
+                float newY = sin * (Vertices[i].x - Center.x) + cos * (Vertices[i].y - Center.y) +
+                             Center.y;
+                Vertices[i] = new Vector3(newX, newY);
             }
             foreach (Edge e in Edges) {
-                Debug.Log($"Edge before rotating {angle} degrees: {e}");
-                Vector3 vertex = e.V1;
-                vertex.x = Mathf.Cos(radians) * (vertex.x - Center.x) - Mathf.Sin(radians) * (vertex.y - Center.y) +
+                e.V1.x = cos * (e.V1.x - Center.x) - sin * (e.V1.y - Center.y) +
                            Center.x;
-                vertex.y = Mathf.Sin(radians) * (vertex.x - Center.x) - Mathf.Cos(radians) * (vertex.y - Center.y) +
+                e.V1.y = sin * (e.V1.x - Center.x) + cos * (e.V1.y - Center.y) +
                            Center.y;
-                vertex = e.V2;
-                vertex.x = Mathf.Cos(radians) * (vertex.x - Center.x) - Mathf.Sin(radians) * (vertex.y - Center.y) +
+                e.V2.x = cos * (e.V2.x - Center.x) - sin * (e.V2.y - Center.y) +
                            Center.x;
-                vertex.y = Mathf.Sin(radians) * (vertex.x - Center.x) - Mathf.Cos(radians) * (vertex.y - Center.y) +
+                e.V2.y = sin * (e.V2.x - Center.x) + cos * (e.V2.y - Center.y) +
                            Center.y;
-                Debug.Log($"Edge after rotating {angle} degrees: {e}");
             }
         }
 
         public void Translate(Vector3 translation)
         {
-            foreach (Vector3 vertex in Vertices)
+            for (int i = 0; i < Vertices.Count; i++)
             {
-                Vector3 vector3 = vertex;
-                vector3 += translation;
+                Vertices[i] += translation;
             }
             foreach (Edge e in Edges)
             {

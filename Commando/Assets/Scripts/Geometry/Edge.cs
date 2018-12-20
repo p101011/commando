@@ -17,9 +17,21 @@ namespace Assets.Scripts.Geometry {
             V2 = v2;
         }
 
-        protected bool Equals(Edge other)
+        public override bool Equals(object obj)
         {
-            return V1.Equals(other.V1) && V2.Equals(other.V2);
+            if (obj == null || obj.GetType() != typeof(Edge)) return false;
+            Edge eObj = (Edge) obj;
+            return  V1 == eObj.V1 && V2 == eObj.V2;
+        }
+
+        public override int GetHashCode()
+        {
+            return V1.GetHashCode() + V2.GetHashCode() << 2;
+        }
+
+        protected static bool Equals(Edge left, Edge right)
+        {
+            return left.V1 == right.V1 && left.V2 == right.V2;
         }
 
         public static bool operator ==(Edge left, Edge right)

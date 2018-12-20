@@ -39,17 +39,15 @@ namespace Assets.Scripts.LevelGeneration
             float radians = Mathf.Deg2Rad * angle;
             BoundingPolygon.Rotate(angle);
             foreach (PointOfInterest poi in KeyPoints) {
-                Vector3 poiC = poi.Coordinates;
-                poiC.x = Mathf.Cos(radians) * (poiC.x - Coordinates.x) - Mathf.Sin(radians) * (poiC.y - Coordinates.y) +
+                poi.Coordinates.x = Mathf.Cos(radians) * (poi.Coordinates.x - Coordinates.x) - Mathf.Sin(radians) * (poi.Coordinates.y - Coordinates.y) +
                            Coordinates.x;
-                poiC.y = Mathf.Sin(radians) * (poiC.x - Coordinates.x) - Mathf.Cos(radians) * (poiC.y - Coordinates.y) +
+                poi.Coordinates.y = Mathf.Sin(radians) * (poi.Coordinates.x - Coordinates.x) - Mathf.Cos(radians) * (poi.Coordinates.y - Coordinates.y) +
                            Coordinates.y;
             }
             foreach (PointOfInterest door in AvailableDoors) {
-                Vector3 poiC = door.Coordinates;
-                poiC.x = Mathf.Cos(radians) * (poiC.x - Coordinates.x) - Mathf.Sin(radians) * (poiC.y - Coordinates.y) +
+                door.Coordinates.x = Mathf.Cos(radians) * (door.Coordinates.x - Coordinates.x) - Mathf.Sin(radians) * (door.Coordinates.y - Coordinates.y) +
                          Coordinates.x;
-                poiC.y = Mathf.Sin(radians) * (poiC.x - Coordinates.x) - Mathf.Cos(radians) * (poiC.y - Coordinates.y) +
+                door.Coordinates.y = Mathf.Sin(radians) * (door.Coordinates.x - Coordinates.x) + Mathf.Cos(radians) * (door.Coordinates.y - Coordinates.y) +
                          Coordinates.y;
             }
         }

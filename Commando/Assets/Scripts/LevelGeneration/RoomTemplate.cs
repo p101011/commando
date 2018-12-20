@@ -41,7 +41,7 @@ namespace Assets.Scripts.LevelGeneration {
                     Debug.Log("GetRoomTemplate did not find a room of type " + type);
                     return null;
                 }
-
+                
                 foreach (JToken doorGroup in roomToken.Children())
                 {
                     if (doorGroup["NumDoors"].Value<int>() != numDoorsConnecting) continue;
@@ -65,6 +65,8 @@ namespace Assets.Scripts.LevelGeneration {
             _shuffledTemplates.RemoveAt(0);
             List<Edge> list = new List<Edge>();
 
+            float roomScalar = GameConstants.DoorWidth / selectedToken["DoorScale"].Value<float>();
+
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (JToken edge in selectedToken["Edges"])
             {
@@ -74,7 +76,7 @@ namespace Assets.Scripts.LevelGeneration {
                 {
                     // json stores positions as relative coordinates, need to scale to be correct for scene
                     int rawValue = s.ToObject<int>();
-                    edgeP.Add(Mathf.RoundToInt(rawValue * GameConstants.RoomScalar));
+                    edgeP.Add(Mathf.RoundToInt(rawValue * roomScalar));
                 }
                 Vector3 v1 = new Vector3(edgeP[0], edgeP[1]);
                 Vector3 v2 = new Vector3(edgeP[2], edgeP[3]);
