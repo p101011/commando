@@ -42,8 +42,10 @@ namespace Assets.Scripts.MasterMind
                     teamActors.Add(newActor);
                 }
                 MasterMind controller = new MasterMind(i, teamActors, TroopContainer[i]);
-                Goal teamObjective = new Goal(Goal.GoalType.SecureBuilding, new [] {Building.Coordinates}, null);
-                controller.AddGoal(teamObjective);
+//                Goal teamObjective = new Goal(Goal.GoalType.SecureBuilding, new [] {Building.Coordinates}, null);
+//                controller.AddGoal(teamObjective);
+                Goal mockObjective = new Goal(Goal.GoalType.Move, new [] {new Vector3(75, 10)}, null);
+                controller.AddGoal(mockObjective);
                 Debug.Log(controller.FormatStatus());
                 Controllers.Add(controller);
             }

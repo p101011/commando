@@ -196,6 +196,13 @@ namespace Assets.Scripts.Geometry
                 e.V1 += translation;
                 e.V2 += translation;
             }
+
+            Center += translation;
+            MinX += translation.x;
+            MinY += translation.y;
+            MaxX += translation.x;
+            MaxY += translation.y;
+
         }
     }
 }

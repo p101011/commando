@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Commando Building Template Builder</title>
+        <meta name="A tool used to generate building templates for use with Commando" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <script src="TemplateBuilder.js" async defer></script>
+        <script src="UIDriver.js" async defer></script>
+        <canvas id="imageCanvas" class="blueprints"></canvas>
+        <div>
+            <button id="loadTemplate" onclick="loadNewTemplate()">Open Template</button>
+        </div>
+        <div>
+            <label for="blueprintLoader" class="button">Load Blueprint</label>
+            <input type="file" id="blueprintLoader" accept="image/png, image/jpeg"/>
+        </div>
+        <div>
+            Room type: <input type="text" id="roomType"><button id="typeSubmit" onclick="nameRoomType()">Enter</button>
+        </div>
+        <div>
+            <button id="save" onclick="save()">Save Template</button>
+            <button id="saveClose" onclick="saveClose()">Save to file</button>
+        </div>
+        <div>
+            <button id="edgeMode" class="button" onclick="switchMode('Edge')">Edge Mode</button>
+            <button id="doorMode" class="button" onclick="switchMode('Door')">Door Mode</button>
+            <button id="scaleMode" class="button" onclick="switchMode('Scale')">Scale Mode</button>
+            <button id="originMode" class="button" onclick="switchMode('Origin')">Origin Mode</button>
+            <button id="resetButton" class="button" onclick="reset()">Reset</button>
+        </div>
+        <footer class="coords">-, -</footer> 
+    </body>
+</html>

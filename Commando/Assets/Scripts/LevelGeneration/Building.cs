@@ -18,13 +18,13 @@ namespace Assets.Scripts.LevelGeneration {
 
         private readonly List<Room> _roomsToBuild = new List<Room>();
 
-        public Building(int id, Vector3 doorCoordinates)
+        public Building(int id, Vector3 doorCoordinates, bool custom=false)
         {
             Rooms = new List<Room>();
             Id = id;
             EntranceCoordinates = new List<Vector3>{doorCoordinates};
 
-            CreateRooms();
+            if (!custom) CreateRooms();
         }
 
         private void CreateRooms()

@@ -59,9 +59,6 @@ namespace Assets.Scripts.LevelGeneration
             {
                 poi.Coordinates += translation;
             }
-            foreach (PointOfInterest door in AvailableDoors) {
-                door.Coordinates += translation;
-            }
         }
     }
 }

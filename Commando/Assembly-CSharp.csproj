@@ -80,6 +80,8 @@
     <Compile Include="Assets\Scripts\MasterMind\Goals\Goal.cs" />
     <Compile Include="Assets\Scripts\MasterMind\MasterMind.cs" />
     <Compile Include="Assets\Scripts\MasterMind\UberMind.cs" />
+    <None Include="Assets\Scripts\LevelGeneration\RoomTemplates - old.json" />
+    <None Include="Assets\Scripts\LevelGeneration\RoomTemplates.json" />
     <None Include="Assets\packages\Unity.Newtonsoft.Json.7.0.0.0\lib\net35-Client\Unity.Newtonsoft.Json.xml" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/peter/Documents/Work Folder/Personal/Repos/p101011/commando/Commando/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

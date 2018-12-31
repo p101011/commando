@@ -28,5 +28,10 @@ namespace Assets.Scripts.LevelGeneration {
             Direction = direction;
             Available = available;
         }
+
+        public override string ToString()
+        {
+            return $"{Type} @ {Coordinates}";
+        }
     }
 }

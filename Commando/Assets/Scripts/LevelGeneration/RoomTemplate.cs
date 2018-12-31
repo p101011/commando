@@ -88,7 +88,7 @@ namespace Assets.Scripts.LevelGeneration {
             foreach (JToken keypoint in selectedToken["KeyPoints"])
             {
                 List<int> point = keypoint["Point"].Values<int>().ToList();
-                point.ForEach(x => Mathf.RoundToInt(x * GameConstants.RoomScalar));
+                point.ForEach(x => Mathf.RoundToInt(x * roomScalar));
                 Vector3 position = new Vector3(point[0], point[1]);
                 PointOfInterest.PoIType pointType = PointOfInterest.PoIType.Door;
                 bool pointAvailable = keypoint["Available"].Value<bool>();

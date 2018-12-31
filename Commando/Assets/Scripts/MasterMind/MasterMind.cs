@@ -96,56 +96,56 @@ namespace Assets.Scripts.MasterMind
 
         public void DecomposeGoal(Goal goal)
         {
-//            int[] evalResults = EvaluateGoal(goal);
-//            goal.AssessGoal(evalResults[0], evalResults[1]);
-//            QueuedGoals.Add(goal);
-//
-//            List<Goal> subGoals = new List<Goal>();
-//            switch (goal.Type)
-//            {
-//                case Goal.GoalType.SecureBuilding:
-//                    Vector3 goalLoc = GameObject.Find("GameManager").GetComponent<HouseBuilder>().GetCoordinates("MainEntrance");
-//                    subGoals.Add(new Goal(Goal.GoalType.Breach, new [] {goalLoc}, goal, 0));
-//                    break;
-//                case Goal.GoalType.SecureRoom:
-//                    Room targetRoom = goal.Target[0] as Room;
-//                    System.Diagnostics.Debug.Assert(targetRoom != null, "targetRoom != null");
-//                    List<Coordinates> leftSweepPath = new List<Coordinates> {targetRoom.Coordinates, targetRoom.Coordinates.Add(targetRoom.RoomWidth, 0) };
-//                    List<Coordinates> rightSweepPath = new List<Coordinates> { targetRoom.Coordinates.Add(0, targetRoom.RoomHeight), targetRoom.Coordinates.Add(targetRoom.RoomWidth, targetRoom.RoomHeight) };
-//                    subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, leftSweepPath, goal, 0));
-//                    subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, rightSweepPath, goal, 0));
-//                    break;
-//                case Goal.GoalType.Breach:
-//                    BackgroundTile targetTile = goal.Target[0] as BackgroundTile;
-//                    System.Diagnostics.Debug.Assert(targetTile != null, "targetTile != null");
-//                    Coordinates leftSide = targetTile.Coordinates.Add(-0.3, -0.56);
-//                    Coordinates rightSide0 = targetTile.Coordinates.Add(0.3, -0.56);
-//                    Coordinates rightSide1 = targetTile.Coordinates.Add(0.35, -0.56);
-//                    Coordinates front = targetTile.Coordinates.Add(0, -0.6);
-//                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{leftSide}, goal, 4));
-//                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{rightSide0}, goal, 4));
-//                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{rightSide1}, goal, 4));
-//                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{front}, goal, 4));
-//                    break;
-//                case Goal.GoalType.MoveWaypoint:
-//                    return;
-//                case Goal.GoalType.Move:
-//                    return;
-//                case Goal.GoalType.Shoot:
-//                    return;
-//                case Goal.GoalType.OpenDoor:
-//                    return;
-//                case Goal.GoalType.Wait:
-//                    return;
-//                default:
-//                    throw new ArgumentOutOfRangeException();
-//            }
-//
-//            foreach (Goal subGoal in subGoals)
-//            {
-//                goal.Phases.Add(subGoal);
-//                DecomposeGoal(subGoal);
-//            }
+            int[] evalResults = EvaluateGoal(goal);
+            goal.AssessGoal(threat: evalResults[0], priority: evalResults[1]);
+            QueuedGoals.Add(goal);
+
+            List<Goal> subGoals = new List<Goal>();
+            switch (goal.Type)
+            {
+                case Goal.GoalType.SecureBuilding:
+                    Vector3 goalLoc = GameObject.Find("GameManager").GetComponent<HouseBuilder>().GetCoordinates("MainEntrance");
+                    subGoals.Add(new Goal(Goal.GoalType.Breach, new [] {goalLoc}, goal, 0));
+                    break;
+                case Goal.GoalType.SecureRoom:
+                    Room targetRoom = goal.Target[0] as Room;
+                    System.Diagnostics.Debug.Assert(targetRoom != null, "targetRoom != null");
+                    List<Coordinates> leftSweepPath = new List<Coordinates> {targetRoom.Coordinates, targetRoom.Coordinates.Add(targetRoom.RoomWidth, 0) };
+                    List<Coordinates> rightSweepPath = new List<Coordinates> { targetRoom.Coordinates.Add(0, targetRoom.RoomHeight), targetRoom.Coordinates.Add(targetRoom.RoomWidth, targetRoom.RoomHeight) };
+                    subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, leftSweepPath, goal, 0));
+                    subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, rightSweepPath, goal, 0));
+                    break;
+                case Goal.GoalType.Breach:
+                    BackgroundTile targetTile = goal.Target[0] as BackgroundTile;
+                    System.Diagnostics.Debug.Assert(targetTile != null, "targetTile != null");
+                    Coordinates leftSide = targetTile.Coordinates.Add(-0.3, -0.56);
+                    Coordinates rightSide0 = targetTile.Coordinates.Add(0.3, -0.56);
+                    Coordinates rightSide1 = targetTile.Coordinates.Add(0.35, -0.56);
+                    Coordinates front = targetTile.Coordinates.Add(0, -0.6);
+                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{leftSide}, goal, 4));
+                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{rightSide0}, goal, 4));
+                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{rightSide1}, goal, 4));
+                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{front}, goal, 4));
+                    break;
+                case Goal.GoalType.MoveWaypoint:
+                    return;
+                case Goal.GoalType.Move:
+                    return;
+                case Goal.GoalType.Shoot:
+                    return;
+                case Goal.GoalType.OpenDoor:
+                    return;
+                case Goal.GoalType.Wait:
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            foreach (Goal subGoal in subGoals)
+            {
+                goal.Phases.Add(subGoal);
+                DecomposeGoal(subGoal);
+            }
         }
 
         public void PrioritizeGoals()

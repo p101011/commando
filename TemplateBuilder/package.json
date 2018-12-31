@@ -1,0 +1,14 @@
+{
+  "name": "commando-template-builder",
+  "version": "1.0.0",
+  "description": "Allows quick creation and manipulation of room templates for Commando",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Peter Day",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^3.0.7"
+  }
+}
