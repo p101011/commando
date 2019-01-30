@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{920126D9-288F-579B-5A8F-4646FF6045C4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -76,8 +77,12 @@
     <Compile Include="Assets\Scripts\LevelGeneration\PointOfInterest.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\Room.cs" />
     <Compile Include="Assets\Scripts\LevelGeneration\RoomTemplate.cs" />
+    <Compile Include="Assets\Scripts\LevelGeneration\WallData.cs" />
     <Compile Include="Assets\Scripts\MasterMind\Actors\Actor.cs" />
     <Compile Include="Assets\Scripts\MasterMind\Actors\ActorCoordinator.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\Data\ActorSensorActionData.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\Data\AudioSensorResult.cs" />
+    <Compile Include="Assets\Scripts\MasterMind\Data\SpottingData.cs" />
     <Compile Include="Assets\Scripts\MasterMind\Goals\Goal.cs" />
     <Compile Include="Assets\Scripts\MasterMind\MasterMind.cs" />
     <Compile Include="Assets\Scripts\MasterMind\UberMind.cs" />

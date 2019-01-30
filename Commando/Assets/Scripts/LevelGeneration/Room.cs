@@ -17,8 +17,9 @@ namespace Assets.Scripts.LevelGeneration
         public List<Room> AdjacentRooms = new List<Room>();
         public List<PointOfInterest> KeyPoints;
         public List<PointOfInterest> AvailableDoors = new List<PointOfInterest>();  // used for building rooms
+        public int Id;
 
-        public Room(RoomTemplate template)
+        public Room(RoomTemplate template, int id)
         {
             BoundingPolygon = new Polygon(new List<Edge>(template.Edges));
             KeyPoints = template.KeyPoints;
@@ -30,9 +31,11 @@ namespace Assets.Scripts.LevelGeneration
             foreach (PointOfInterest poi in KeyPoints) {
                 if (poi.Type == PointOfInterest.PoIType.Door && poi.Available) AvailableDoors.Add(poi);
             }
+
+            Id = id;
         }
         
-        public Room(RoomType type, int numDoors) : this(RoomTemplate.GetRoomTemplate(type, numDoors, true)){}
+        public Room(RoomType type, int numDoors, int id) : this(RoomTemplate.GetRoomTemplate(type, numDoors, true), id){}
 
         public void Rotate(int angle) 
         {

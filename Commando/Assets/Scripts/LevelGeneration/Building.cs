@@ -29,21 +29,22 @@ namespace Assets.Scripts.LevelGeneration {
 
         private void CreateRooms()
         {
-
-            Room currentRoom = new Room(Room.RoomType.Foyer, 0);
+            int createdRooms = 0;
+            Room currentRoom = new Room(Room.RoomType.Foyer, 0, createdRooms);
             currentRoom.Translate(EntranceCoordinates[0]);
             Rooms.Add(currentRoom);
             _roomsToBuild.Add(currentRoom);
             BoundingPolygon = new Polygon(currentRoom.BoundingPolygon);
             while (_roomsToBuild.Count > 0)
             {
+                createdRooms++;
                 currentRoom = _roomsToBuild[0];
-                BuildNewRoom(currentRoom);
+                BuildNewRoom(currentRoom, createdRooms);
                 _roomsToBuild.RemoveAt(0);
             }
         }
 
-        private void BuildNewRoom(Room seedRoom)
+        private void BuildNewRoom(Room seedRoom, int roomIndex)
         {
             while (seedRoom.AvailableDoors.Count > 0)
             {
@@ -65,7 +66,7 @@ namespace Assets.Scripts.LevelGeneration {
                         EntranceCoordinates.Add(door.Coordinates);
                     }
                     else {
-                        newRoom = new Room(template);
+                        newRoom = new Room(template, roomIndex);
                         templateValid = TryFitNewRoom(newRoom, door);
                     }
                 }

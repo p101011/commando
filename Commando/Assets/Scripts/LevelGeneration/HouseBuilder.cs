@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Assets.Scripts.Geometry;
@@ -70,6 +71,11 @@ namespace Assets.Scripts.LevelGeneration
                             wallInstance.transform.localScale =
                                 new Vector3(wallLength, wallWidth);
                         }
+                        WallData instanceData = wallInstance.GetComponent("WallData") as WallData;
+                        Debug.Assert(instanceData != null, nameof(instanceData) + " != null");
+                        instanceData.Type = WallData.WallType.Interior;
+                        instanceData.BuildingId = b.Id;
+                        instanceData.RoomId = r.Id;
                     }
                 }
             }
@@ -126,7 +132,7 @@ namespace Assets.Scripts.LevelGeneration
                 new List<Edge> {new Edge(ll, lr), new Edge(lr, ur), new Edge(ur, ul), new Edge(ul, ll)};
             List<PointOfInterest> testPoints = new List<PointOfInterest> { new PointOfInterest(PointOfInterest.PoIType.Door, PointOfInterest.Facing.South, true, new Vector3(.5f, 0)) };
             RoomTemplate testTemplate = new RoomTemplate(testEdges.ToArray(), testPoints);
-            Room testRoom = new Room(testTemplate);
+            Room testRoom = new Room(testTemplate, 0);
             List<Edge> expectedEdges =
                 new List<Edge> { new Edge(ur, ul), new Edge(ul, ll), new Edge(ll, lr), new Edge(lr, ur) };
             List<PointOfInterest> expectedPoints = new List<PointOfInterest> { new PointOfInterest(PointOfInterest.PoIType.Door, PointOfInterest.Facing.North, true, new Vector3(.5f, 1)) };

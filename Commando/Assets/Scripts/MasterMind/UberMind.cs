@@ -42,7 +42,7 @@ namespace Assets.Scripts.MasterMind
                     TroopContainer[i][j] = actorGameObject;
                     teamActors.Add(newActor);
                 }
-                MasterMind controller = new MasterMind(i, teamActors, TroopContainer[i]);
+                MasterMind controller = new MasterMind(i, teamActors);
                 //                Goal teamObjective = new Goal(Goal.GoalType.SecureBuilding, new [] {Building.Coordinates}, null);
                 //                controller.AddGoal(teamObjective);
                 Vector3 entranceCoordinates = new Vector3((float)GameVariables.XRes / 2, (float)GameVariables.YRes / 2);
@@ -59,8 +59,7 @@ namespace Assets.Scripts.MasterMind
             foreach (MasterMind controller in Controllers) 
             {
                 _prioritizeLock %= 5; // we wait 5 cycles before prioritizing most goals (barring some very important ones) to allow multiple commands to queue
-                controller.PrioritizeGoals(shouldPrioritize: _prioritizeLock == 0);
-                controller.UpdateActorState(Time.deltaTime);
+                controller.Update();
                 _prioritizeLock++;
             }
         }
