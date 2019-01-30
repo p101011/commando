@@ -19,7 +19,8 @@ namespace Assets.Scripts.LevelGeneration
 
         // prefabs for tiles
         public GameObject[] InteriorTiles;
-        public GameObject[] ExteriorTiles; // An array of exterior tile prefabs.
+        public GameObject ExteriorTile; // An array of exterior tile prefabs.
+        public GameObject WallPrefab;
         private GameObject _boardHolder; // GameObject that acts as a container for all other tiles.
         private GameObject _wallHolder;
         private GameObject _floorHolder;
@@ -38,7 +39,7 @@ namespace Assets.Scripts.LevelGeneration
             InstantiateWalls();
             InstantiateBuildingFloor();
         }
-
+        
         private void InstantiateWalls()
         {
             foreach (Building b in Buildings) 
@@ -47,7 +48,28 @@ namespace Assets.Scripts.LevelGeneration
                 {
                     foreach (Edge e in r.BoundingPolygon.Edges)
                     {
-                        DrawLine(e.V1, e.V2, GameConstants.WallColor, GameConstants.WallThickness);
+                        Vector3 center = (e.V1 + e.V2) / 2;
+                        float angle = Math.Abs(Vector3.Angle(e.V2 - e.V1, Vector3.right) % 180);
+                        GameObject wallInstance = Instantiate(WallPrefab, center, Quaternion.identity);
+                        // wall prefab has sprite that is 72 px tall; need to adjust length to match
+                        float wallLength = Vector3.Distance(e.V1, e.V2) / GameConstants.TileSize;
+                        float wallWidth = (float)GameConstants.WallThickness / GameConstants.TileSize;
+                        wallInstance.transform.parent = _wallHolder.transform;
+                        // we can't just rotate colliders by 90 degrees for some stupid reason
+                        if (Math.Abs(angle - 180) < float.Epsilon || Math.Abs(angle - 90) < float.Epsilon)
+                        {
+                            wallInstance.GetComponent<BoxCollider2D>().size = new Vector2(GameConstants.WallThickness / wallWidth,
+                                Vector3.Distance(e.V1, e.V2) / wallLength);
+                            wallInstance.transform.localScale =
+                                new Vector3(wallWidth, wallLength);
+                        }
+                        else
+                        {
+                            wallInstance.GetComponent<BoxCollider2D>().size = new Vector2(Vector3.Distance(e.V1, e.V2) / wallLength,
+                                GameConstants.WallThickness / wallWidth);
+                            wallInstance.transform.localScale =
+                                new Vector3(wallLength, wallWidth);
+                        }
                     }
                 }
             }
@@ -79,42 +101,19 @@ namespace Assets.Scripts.LevelGeneration
                 Buildings.Add(new Building(i, entranceCoordinates));
             }
         }
-
+        
         [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         private void InstantiateBackgroundTiles()
         {
-            for (int i = 0; i <= Mathf.CeilToInt(GameVariables.XRes / GameConstants.TileSize); i++)
-            {
-                for (int j = 0; j <= Mathf.CeilToInt(GameVariables.YRes / GameConstants.TileSize); j++) {
-                    int randomIndex = Random.Range(0, ExteriorTiles.Length);
-                    Vector3 position = new Vector3(i * GameConstants.TileSize, j * GameConstants.TileSize, 0f);
-                    GameObject tileInstance = Instantiate(ExteriorTiles[randomIndex], position, Quaternion.identity);
-                    tileInstance.transform.parent = _boardHolder.transform;
-                }
-            }
+            Vector3 position = new Vector3((float) (GameVariables.XRes / 2.0), (float) (GameVariables.YRes / 2.0));
+            GameObject tileInstance = Instantiate(ExteriorTile, position, Quaternion.identity);
+            tileInstance.transform.parent = _boardHolder.transform;
+            tileInstance.transform.localScale = new Vector3(GameVariables.XRes / GameConstants.TileSize, GameVariables.YRes / GameConstants.TileSize);
         }
 
         public Vector3 GetCoordinates(string identifier)
         {
             return new Vector3();
-        }
-
-        private void DrawLine(Vector3 start, Vector3 end, Color color, float width)
-        {
-            GameObject myLine = new GameObject("Wall");
-            myLine.transform.parent = _wallHolder.transform;
-            myLine.transform.position = start;
-            myLine.AddComponent<LineRenderer>();
-            LineRenderer lr = myLine.GetComponent<LineRenderer>();
-            lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-            lr.startColor = color;
-            lr.endColor = color;
-            lr.startWidth = width;
-            lr.endWidth = width;
-            lr.SetPosition(0, start);
-            lr.SetPosition(1, end);
-            lr.sortingLayerName = "Foreground";
-            lr.sortingOrder = 5;
         }
 
         private static void TestRoomRotation()

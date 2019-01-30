@@ -12,7 +12,7 @@ namespace Assets.Scripts.Helpers {
         {
             foreach (Goal goal in goals)
             {
-                Debug.Log(goal.FormatGoal());
+                Debug.Log(goal.ToString());
             }
         }
     }

@@ -53,9 +53,9 @@ namespace Assets.Scripts.MasterMind.Goals
             Phases.Remove(phase);
         }
 
-        public string FormatGoal()
+        public override string ToString()
         {
-            return string.Format("{0:G}: Threat={1}, Priority={2}", Type, EstimatedThreat, Priority);
+            return $"{Type:G}: Threat={EstimatedThreat}, Priority={Priority}";
         }
     }
 }

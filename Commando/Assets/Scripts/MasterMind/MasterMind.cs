@@ -33,9 +33,10 @@ namespace Assets.Scripts.MasterMind
             DecomposeGoal(goal);
         }
 
-        public void ClearedPhase(Goal phase) 
+        public void ClearedPhase(Goal phase)
         {
-            while (true) {
+            bool canClearPhase = true;
+            while (canClearPhase) {
                 ActiveGoals.Remove(phase);
                 if (phase.Parent != null)
                 {
@@ -43,12 +44,12 @@ namespace Assets.Scripts.MasterMind
                     if (phase.Parent.Phases.Count == 0)
                     {
                         phase = phase.Parent;
-                        continue;
                     }
+                    else canClearPhase = false;
                 }
-                break;
+                else canClearPhase = false;
             }
-            PrioritizeGoals();
+            PrioritizeGoals(true);
         }
 
         public int[] EvaluateGoal(Goal goal)
@@ -104,29 +105,11 @@ namespace Assets.Scripts.MasterMind
             switch (goal.Type)
             {
                 case Goal.GoalType.SecureBuilding:
-                    Vector3 goalLoc = GameObject.Find("GameManager").GetComponent<HouseBuilder>().GetCoordinates("MainEntrance");
-                    subGoals.Add(new Goal(Goal.GoalType.Breach, new [] {goalLoc}, goal, 0));
-                    break;
+                    return;
                 case Goal.GoalType.SecureRoom:
-                    Room targetRoom = goal.Target[0] as Room;
-                    System.Diagnostics.Debug.Assert(targetRoom != null, "targetRoom != null");
-                    List<Coordinates> leftSweepPath = new List<Coordinates> {targetRoom.Coordinates, targetRoom.Coordinates.Add(targetRoom.RoomWidth, 0) };
-                    List<Coordinates> rightSweepPath = new List<Coordinates> { targetRoom.Coordinates.Add(0, targetRoom.RoomHeight), targetRoom.Coordinates.Add(targetRoom.RoomWidth, targetRoom.RoomHeight) };
-                    subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, leftSweepPath, goal, 0));
-                    subGoals.Add(new Goal(Goal.GoalType.MoveWaypoint, rightSweepPath, goal, 0));
-                    break;
+                    return;
                 case Goal.GoalType.Breach:
-                    BackgroundTile targetTile = goal.Target[0] as BackgroundTile;
-                    System.Diagnostics.Debug.Assert(targetTile != null, "targetTile != null");
-                    Coordinates leftSide = targetTile.Coordinates.Add(-0.3, -0.56);
-                    Coordinates rightSide0 = targetTile.Coordinates.Add(0.3, -0.56);
-                    Coordinates rightSide1 = targetTile.Coordinates.Add(0.35, -0.56);
-                    Coordinates front = targetTile.Coordinates.Add(0, -0.6);
-                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{leftSide}, goal, 4));
-                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{rightSide0}, goal, 4));
-                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{rightSide1}, goal, 4));
-                    subGoals.Add(new Goal(Goal.GoalType.Move, new []{front}, goal, 4));
-                    break;
+                    return;
                 case Goal.GoalType.MoveWaypoint:
                     return;
                 case Goal.GoalType.Move:
@@ -148,7 +131,7 @@ namespace Assets.Scripts.MasterMind
             }
         }
 
-        public void PrioritizeGoals()
+        public void PrioritizeGoals(bool shouldPrioritize)
         {
             // decide which goals should be completed first
             // need to take into account relative priority, estimated duration, actor cost
@@ -160,20 +143,26 @@ namespace Assets.Scripts.MasterMind
                 // high priority first
                 QueuedGoals = new List<Goal>(QueuedGoals.OrderBy(x => -x.Priority));
                 Goal currentGoal = QueuedGoals[0];
-                foreach (Goal nextGoal in QueuedGoals)
+                if (shouldPrioritize || currentGoal.Priority > 10)
                 {
-                    int priorityDifference = currentGoal.Priority - nextGoal.Priority;
-                    int neededTroops = Troops.IdleTroops.Count - currentGoal.EstimatedThreat;
-                    if (priorityDifference + neededTroops < 0 && nextGoal.IsAction)
+                    foreach (Goal nextGoal in QueuedGoals)
                     {
-                        currentGoal = nextGoal;
+                        int priorityDifference = currentGoal.Priority - nextGoal.Priority;
+                        int neededTroops = Troops.IdleTroops.Count - currentGoal.EstimatedThreat;
+                        if (priorityDifference + neededTroops < 0 && nextGoal.IsAction)
+                        {
+                            currentGoal = nextGoal;
+                        }
                     }
-                }
 
-                Troops.GiveGoal(currentGoal);
-                ActiveGoals.Add(currentGoal);
-                QueuedGoals.Remove(currentGoal);
-                Debug.Log(string.Format("Controller {0} is assigning {1} to the troops", Team, currentGoal.FormatGoal()));
+                    Troops.GiveGoal(currentGoal);
+                    QueuedGoals.AddRange(Troops.PostponedGoals);
+                    Troops.PostponedGoals = new List<Goal>();
+                    ActiveGoals.Add(currentGoal);
+                    QueuedGoals.Remove(currentGoal);
+                    Debug.Log($"Controller {Team} is assigning {currentGoal} to the troops");
+                }
+                else break;
             }
         }
 
@@ -189,8 +178,9 @@ namespace Assets.Scripts.MasterMind
         public string FormatStatus()
         {
             string output = "";
-            output += string.Format("Controller {0} controls ({1}) {2}/{3} troops\n", Team, Troops.IdleTroops.Count, Troops.LivingTroops, Troops.StartingTroops);
-            output += string.Format("Controller {0} has {1}/{2} goals", Team, ActiveGoals.Count, QueuedGoals.Count);
+            output +=
+                $"Controller {Team} controls ({Troops.IdleTroops.Count}) {Troops.LivingTroops}/{Troops.StartingTroops} troops\n";
+            output += $"Controller {Team} has {ActiveGoals.Count}/{QueuedGoals.Count} goals";
             Logger.LogGoals(ActiveGoals);
             Logger.LogGoals(QueuedGoals);
             return output;

@@ -46,7 +46,7 @@ namespace Assets.Scripts.MasterMind.Actors
                     break;
                 case Goal.GoalType.MoveWaypoint:
                 case Goal.GoalType.Move:
-                    _goalPositionVector = new Vector3((float) newGoal.Target[0].Coordinates.x, (float) newGoal.Target[0].Coordinates.y);
+                    _goalPositionVector = new Vector3(newGoal.Target[0].Coordinates.x, newGoal.Target[0].Coordinates.y);
 //                    float angleBetween = Vector3.Angle(_positionVector, _goalPositionVector);
                     _goalFacing = Quaternion.FromToRotation(PositionVector, _goalPositionVector);
                     break;
@@ -111,9 +111,9 @@ namespace Assets.Scripts.MasterMind.Actors
             }
         }
 
-        public string FormatActor()
+        public override string ToString()
         {
-            return string.Format("Actor's current goal is {0} and actor has {1} other goals", CurrentGoal.FormatGoal(), NextGoals.Count);
+            return $"Actor's current goal is {CurrentGoal} and actor has {NextGoals.Count} other goals";
         }
     }
 }

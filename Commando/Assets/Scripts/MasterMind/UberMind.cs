@@ -13,6 +13,7 @@ namespace Assets.Scripts.MasterMind
 
         public static int NumTeams = 1;
         public static int NumTroops = 4;
+        private int _prioritizeLock = 1;
         public Building Building;
         public List<MasterMind> Controllers = new List<MasterMind>();
         public GameObject[][] TroopContainer;
@@ -42,9 +43,10 @@ namespace Assets.Scripts.MasterMind
                     teamActors.Add(newActor);
                 }
                 MasterMind controller = new MasterMind(i, teamActors, TroopContainer[i]);
-//                Goal teamObjective = new Goal(Goal.GoalType.SecureBuilding, new [] {Building.Coordinates}, null);
-//                controller.AddGoal(teamObjective);
-                Goal mockObjective = new Goal(Goal.GoalType.Move, new [] {new Vector3(75, 10)}, null);
+                //                Goal teamObjective = new Goal(Goal.GoalType.SecureBuilding, new [] {Building.Coordinates}, null);
+                //                controller.AddGoal(teamObjective);
+                Vector3 entranceCoordinates = new Vector3((float)GameVariables.XRes / 2, (float)GameVariables.YRes / 2);
+                Goal mockObjective = new Goal(Goal.GoalType.Move, new [] {new Vector3((float) (75 * 4.8), (float) (90 * 4.8)) + entranceCoordinates}, null);
                 controller.AddGoal(mockObjective);
                 Debug.Log(controller.FormatStatus());
                 Controllers.Add(controller);
@@ -54,10 +56,12 @@ namespace Assets.Scripts.MasterMind
 
         public void Update()
         {
-            foreach (MasterMind controller in Controllers)
+            foreach (MasterMind controller in Controllers) 
             {
-                controller.PrioritizeGoals();
+                _prioritizeLock %= 5; // we wait 5 cycles before prioritizing most goals (barring some very important ones) to allow multiple commands to queue
+                controller.PrioritizeGoals(shouldPrioritize: _prioritizeLock == 0);
                 controller.UpdateActorState(Time.deltaTime);
+                _prioritizeLock++;
             }
         }
 

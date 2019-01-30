@@ -17,6 +17,7 @@ namespace Assets.Scripts.MasterMind.Actors {
         public List<Actor> Troops;
         public GameObject[] TroopObjects;
         public List<Goal> CompletedGoals = new List<Goal>();
+        public List<Goal> PostponedGoals = new List<Goal>();
 
 
         public ActorCoordinator(IList<Actor> actors, GameObject[] troopObjects)
@@ -35,8 +36,37 @@ namespace Assets.Scripts.MasterMind.Actors {
 
         public void GiveGoal(Goal newGoal)
         {
-            IdleTroops[0].GiveGoal(newGoal);
-            IdleTroops.RemoveAt(0);
+
+            int neededTroops = newGoal.EstimatedThreat;
+
+            if (neededTroops <= IdleTroops.Count)
+            {
+                foreach (Actor a in IdleTroops)
+                {
+                    a.GiveGoal(newGoal);
+                }
+
+                IdleTroops = new List<Actor>();
+            }
+            else
+            {
+                int draftedTroops = 0;
+
+                for (int i = 0; draftedTroops < neededTroops && i < IdleTroops.Count; i++)
+                {
+                    IdleTroops[i].GiveGoal(newGoal);
+                    IdleTroops.RemoveAt(i);
+                    draftedTroops++;
+                }
+
+                for (int i = 0; draftedTroops < neededTroops && i < Troops.Count; i++)
+                {
+                    if (Troops[i].CurrentGoal.Priority >= newGoal.Priority) continue;
+                    PostponedGoals.Add(Troops[i].CurrentGoal);
+                    Troops[i].GiveGoal(newGoal);
+                    draftedTroops++;
+                }
+            }
         }
 
         public void UpdateState(float deltaTime)
