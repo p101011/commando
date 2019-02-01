@@ -14,5 +14,11 @@ namespace Assets.Scripts.Helpers {
         public static double Tolerance = float.Epsilon;
 
         public static bool Debug = true;
+
+        // AI VARIABLES //
+
+            // Sensor Variables //
+        public static int FieldOfView = 190;
+        public static float DegreesPerLoSRay = 19f;
     }
 }

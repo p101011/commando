@@ -25,6 +25,8 @@ namespace Assets.Scripts.MasterMind.Actors
         private Vector3 _goalPositionVector;
         private Quaternion _goalFacing = Quaternion.identity;
 
+        private static Vector3 _foVAngleOffset = 
+
         public Actor(Vector3 startPosition, GameObject i)
         {
             Position = startPosition;
@@ -37,6 +39,11 @@ namespace Assets.Scripts.MasterMind.Actors
             AudioSensorResult[] audioTargets = CheckAudio();
             Action[] reflexes = EvaluateActions();
             return new ActorSensorActionData(reflexes, visualTargets, audioTargets);
+        }
+
+        private RaycastHit2D[] CheckSight()
+        {
+            Vector3 startingAngle = (Facing * Vector3.right) - _foVAngleOffset;
         }
 
         public override string ToString()
