@@ -34,91 +34,91 @@ namespace Assets.Scripts.MasterMind.Actors {
             }
         }
 
-        public void GiveGoal(Goal newGoal)
-        {
-
-            int neededTroops = newGoal.EstimatedThreat;
-
-            if (neededTroops <= IdleTroops.Count)
-            {
-                foreach (Actor a in IdleTroops)
-                {
-                    a.GiveGoal(newGoal);
-                }
-
-                IdleTroops = new List<Actor>();
-            }
-            else
-            {
-                int draftedTroops = 0;
-
-                for (int i = 0; draftedTroops < neededTroops && i < IdleTroops.Count; i++)
-                {
-                    IdleTroops[i].GiveGoal(newGoal);
-                    IdleTroops.RemoveAt(i);
-                    draftedTroops++;
-                }
-
-                for (int i = 0; draftedTroops < neededTroops && i < Troops.Count; i++)
-                {
-                    if (Troops[i].CurrentGoal.Priority >= newGoal.Priority) continue;
-                    PostponedGoals.Add(Troops[i].CurrentGoal);
-                    Troops[i].GiveGoal(newGoal);
-                    draftedTroops++;
-                }
-            }
-        }
-
-        public void UpdateState(float deltaTime)
-        {
-            foreach (Actor actor in Troops)
-            {
-                if (actor.IsIdle) continue;
-                actor.CurrentGoal.EstimatedCompletion -= deltaTime;
-                switch (actor.CurrentGoal.Type) {
-                    case Goal.GoalType.SecureBuilding:
-                        break;
-                    case Goal.GoalType.SecureRoom:
-                        break;
-                    case Goal.GoalType.Breach:
-                        break;
-                    case Goal.GoalType.MoveWaypoint:
-                        List<Location> path = actor.CurrentGoal.Target;
-                        Goal parent = actor.CurrentGoal.Parent;
-                        Goal waypoint = new Goal(Goal.GoalType.Move, new[] { path[0].Coordinates }, parent);
-                        List<Vector3> restCoordinates = new List<Vector3>(path.Count - 1);
-                        for (int i = 1; i < path.Count; i++) {
-                            restCoordinates.Add(path[i].Coordinates);
-                        }
-                        Goal rest = new Goal(Goal.GoalType.Move, restCoordinates, parent);
-                        actor.SetGoal(waypoint);
-                        actor.GiveGoal(rest);
-                        break;
-                    case Goal.GoalType.Move:
-                        actor.MoveStep(deltaTime);
-                        break;
-                    case Goal.GoalType.Shoot:
-                        break;
-                    case Goal.GoalType.OpenDoor:
-                        BackgroundTile doorTile = actor.CurrentGoal.Target[0] as BackgroundTile;
-                        float distance =
-                            Vector3.Magnitude(actor.PositionVector - doorTile.Coordinates);
-                        if (distance <= GameVariables.ActorReach) {
-                            actor.OpenDoor();
-                        } else
-                        {
-                            Goal oldGoal = actor.CurrentGoal;
-                            actor.GiveGoal(actor.CurrentGoal);
-                            actor.SetGoal(new Goal(Goal.GoalType.Move, oldGoal.Target, oldGoal.Parent));
-                            oldGoal.Parent.Phases.Add(actor.CurrentGoal);
-                        }
-                        break;
-                    case Goal.GoalType.Wait:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+//        public void GiveGoal(Goal newGoal)
+//        {
+//
+//            int neededTroops = newGoal.EstimatedThreat;
+//
+//            if (neededTroops <= IdleTroops.Count)
+//            {
+//                foreach (Actor a in IdleTroops)
+//                {
+//                    a.GiveGoal(newGoal);
+//                }
+//
+//                IdleTroops = new List<Actor>();
+//            }
+//            else
+//            {
+//                int draftedTroops = 0;
+//
+//                for (int i = 0; draftedTroops < neededTroops && i < IdleTroops.Count; i++)
+//                {
+//                    IdleTroops[i].GiveGoal(newGoal);
+//                    IdleTroops.RemoveAt(i);
+//                    draftedTroops++;
+//                }
+//
+//                for (int i = 0; draftedTroops < neededTroops && i < Troops.Count; i++)
+//                {
+//                    if (Troops[i].CurrentGoal.Priority >= newGoal.Priority) continue;
+//                    PostponedGoals.Add(Troops[i].CurrentGoal);
+//                    Troops[i].GiveGoal(newGoal);
+//                    draftedTroops++;
+//                }
+//            }
+//        }
+//
+//        public void UpdateState(float deltaTime)
+//        {
+//            foreach (Actor actor in Troops)
+//            {
+//                if (actor.IsIdle) continue;
+//                actor.CurrentGoal.EstimatedCompletion -= deltaTime;
+//                switch (actor.CurrentGoal.Type) {
+//                    case Goal.GoalType.SecureBuilding:
+//                        break;
+//                    case Goal.GoalType.SecureRoom:
+//                        break;
+//                    case Goal.GoalType.Breach:
+//                        break;
+//                    case Goal.GoalType.MoveWaypoint:
+//                        List<Location> path = actor.CurrentGoal.Target;
+//                        Goal parent = actor.CurrentGoal.Parent;
+//                        Goal waypoint = new Goal(Goal.GoalType.Move, new[] { path[0].Coordinates }, parent);
+//                        List<Vector3> restCoordinates = new List<Vector3>(path.Count - 1);
+//                        for (int i = 1; i < path.Count; i++) {
+//                            restCoordinates.Add(path[i].Coordinates);
+//                        }
+//                        Goal rest = new Goal(Goal.GoalType.Move, restCoordinates, parent);
+//                        actor.SetGoal(waypoint);
+//                        actor.GiveGoal(rest);
+//                        break;
+//                    case Goal.GoalType.Move:
+//                        actor.MoveStep(deltaTime);
+//                        break;
+//                    case Goal.GoalType.Shoot:
+//                        break;
+//                    case Goal.GoalType.OpenDoor:
+//                        BackgroundTile doorTile = actor.CurrentGoal.Target[0] as BackgroundTile;
+//                        float distance =
+//                            Vector3.Magnitude(actor.PositionVector - doorTile.Coordinates);
+//                        if (distance <= GameVariables.ActorReach) {
+//                            actor.OpenDoor();
+//                        } else
+//                        {
+//                            Goal oldGoal = actor.CurrentGoal;
+//                            actor.GiveGoal(actor.CurrentGoal);
+//                            actor.SetGoal(new Goal(Goal.GoalType.Move, oldGoal.Target, oldGoal.Parent));
+//                            oldGoal.Parent.Phases.Add(actor.CurrentGoal);
+//                        }
+//                        break;
+//                    case Goal.GoalType.Wait:
+//                        break;
+//                    default:
+//                        throw new ArgumentOutOfRangeException();
+//                }
+//            }
+//        }
     }
 }

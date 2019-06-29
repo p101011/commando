@@ -20,17 +20,15 @@ namespace Assets.Scripts.MasterMind
         public int Team;
 
         public Actor[] Troops;
+        private State _currentState;
+        private MentalMap _map = new MentalMap();
         public List<Goal> ActiveGoals = new List<Goal>();
         public List<Goal> QueuedGoals = new List<Goal>();
-
-        private int _idleCount;
-        private int _livingCount;
 
         public MasterMind(int team, IEnumerable<Actor> actors)
         {
             Team = team;
             Troops = actors.ToArray();
-            _idleCount = _livingCount = Troops.Length;
         }
 
         public void AddGoal(Goal newGoal)
@@ -40,45 +38,67 @@ namespace Assets.Scripts.MasterMind
 
         public void Update()
         {
-            UpdateState();
+            _currentState = new State();
+            UpdateSensors();
             EvaluateActorStates();
             PrioritizeGoals();
             AssignGoals();
         }
 
-        private void UpdateState()
+        private void UpdateSensors()
         {
             foreach (Actor soldier in Troops)
             {
-                ActorSensorActionData soldierResponse = soldier.UpdateState();
-                ProcessSensorActionData(soldierResponse);
+                ActorSensorData soldierResponse = soldier.UpdateState();
+                ProcessSensorData(soldierResponse);
             }
+        }
+
+        private void ProcessSensorData(ActorSensorData input)
+        {
+            UpdateMap(input.SightCone);
+            UpdateState(input);
+        }
+
+        private void UpdateMap(VisualCone visionData)
+        {
+            // as index increases, hits sweep right to left 
+
+            // remove hits which don't provide new info - e.g. hits on same wall
+
+//            HashSet<Rigidbody2D> seenRigidBodies = new HashSet<Rigidbody2D>();
+//            List<RaycastHit2D> prunedData = new List<RaycastHit2D>();
+//            foreach (RaycastHit2D hit in visionData)
+//            {
+//                if (seenRigidBodies.Contains(hit.rigidbody)) continue;
+//                seenRigidBodies.Add(hit.rigidbody);
+//                prunedData.Add(hit);
+//            }
+        
+            
+
+        }
+
+        private void UpdateState(ActorSensorData input)
+        {
+
         }
 
         private void EvaluateActorStates()
         {
-
         }
 
         private void PrioritizeGoals()
         {
-
         }
 
         private void AssignGoals()
         {
-
         }
 
         public string FormatStatus()
         {
-            string output = "";
-            output +=
-                $"Controller {Team} controls ({_idleCount}) {_livingCount}/{Troops.Length} troops\n";
-            output += $"Controller {Team} has {ActiveGoals.Count}/{QueuedGoals.Count} goals";
-            Logger.LogGoals(ActiveGoals);
-            Logger.LogGoals(QueuedGoals);
-            return output;
+            return "TODO: log this state";
         }
     }
 }

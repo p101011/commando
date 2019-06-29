@@ -20,5 +20,8 @@ namespace Assets.Scripts.Helpers {
             // Sensor Variables //
         public static int FieldOfView = 190;
         public static float DegreesPerLoSRay = 19f;
+
+            // Pathfinding Variables //
+        public static int MentalMapResolution = 10;
     }
 }

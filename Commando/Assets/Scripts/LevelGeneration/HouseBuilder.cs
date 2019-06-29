@@ -24,6 +24,7 @@ namespace Assets.Scripts.LevelGeneration
         public GameObject WallPrefab;
         private GameObject _boardHolder; // GameObject that acts as a container for all other tiles.
         private GameObject _wallHolder;
+        private GameObject _sandbox;
         private GameObject _floorHolder;
 
         [UsedImplicitly]
@@ -31,14 +32,45 @@ namespace Assets.Scripts.LevelGeneration
         {
 
             // Create the board holder.
+            _sandbox = new GameObject("SandboxBorder");
             _boardHolder = new GameObject("BoardHolder");
             _wallHolder = new GameObject("WallHolder");
             _floorHolder = new GameObject("FloorHolder");
+            InstantiateSandboxWalls();
             TestRoomRotation();
             CreateBuildings();
             InstantiateBackgroundTiles();
             InstantiateWalls();
             InstantiateBuildingFloor();
+        }
+
+        private void InstantiateSandboxWalls()
+        {
+            Vector3[] wallCenters =
+            {
+                new Vector3(0, GameVariables.YRes / 2),
+                new Vector3(GameVariables.XRes / 2, GameVariables.YRes),
+                new Vector3(GameVariables.XRes, GameVariables.YRes / 2),
+                new Vector3(GameVariables.XRes / 2, 0),
+            };
+
+            GameObject leftWall = Instantiate(WallPrefab, wallCenters[0], Quaternion.identity);
+            GameObject rightWall = Instantiate(WallPrefab, wallCenters[2], Quaternion.identity);
+            GameObject topWall = Instantiate(WallPrefab, wallCenters[1], Quaternion.identity);
+            GameObject bottomWall = Instantiate(WallPrefab, wallCenters[3], Quaternion.identity);
+
+            Vector3 horWallScale = new Vector3((float)GameVariables.XRes / GameConstants.TileSize, (float)GameConstants.WallThickness / GameConstants.TileSize);
+            Vector3 vertWallScale = new Vector3((float)GameConstants.WallThickness / GameConstants.TileSize, (float)GameVariables.YRes / GameConstants.TileSize);
+
+            leftWall.transform.parent = _sandbox.transform;
+            rightWall.transform.parent = _sandbox.transform;
+            topWall.transform.parent = _sandbox.transform;
+            bottomWall.transform.parent = _sandbox.transform;
+
+            leftWall.transform.localScale = vertWallScale;
+            rightWall.transform.localScale = vertWallScale;
+            topWall.transform.localScale = horWallScale;
+            bottomWall.transform.localScale = horWallScale;
         }
         
         private void InstantiateWalls()
@@ -59,21 +91,17 @@ namespace Assets.Scripts.LevelGeneration
                         // we can't just rotate colliders by 90 degrees for some stupid reason
                         if (Math.Abs(angle - 180) < float.Epsilon || Math.Abs(angle - 90) < float.Epsilon)
                         {
-                            wallInstance.GetComponent<BoxCollider2D>().size = new Vector2(GameConstants.WallThickness / wallWidth,
-                                Vector3.Distance(e.V1, e.V2) / wallLength);
                             wallInstance.transform.localScale =
                                 new Vector3(wallWidth, wallLength);
                         }
                         else
                         {
-                            wallInstance.GetComponent<BoxCollider2D>().size = new Vector2(Vector3.Distance(e.V1, e.V2) / wallLength,
-                                GameConstants.WallThickness / wallWidth);
                             wallInstance.transform.localScale =
                                 new Vector3(wallLength, wallWidth);
                         }
-                        WallData instanceData = wallInstance.GetComponent("WallData") as WallData;
+                        PhysicsData instanceData = wallInstance.GetComponent<PhysicsData>();
                         Debug.Assert(instanceData != null, nameof(instanceData) + " != null");
-                        instanceData.Type = WallData.WallType.Interior;
+                        instanceData.Type = PhysicsData.ObjectType.InteriorWall;
                         instanceData.BuildingId = b.Id;
                         instanceData.RoomId = r.Id;
                     }

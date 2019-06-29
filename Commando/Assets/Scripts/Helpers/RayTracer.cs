@@ -8,19 +8,33 @@ namespace Assets.Scripts.Helpers
 
         private static GameObject _rayHolder;
         private static int _raysCast;
+        private static int _layerBitMask = 0;
+
+        private static readonly float RayLength = Vector3.Distance(new Vector3(GameVariables.XRes, 0), new Vector3(0, GameVariables.YRes));
 
         public void Start()
         {
             _rayHolder = new GameObject("RayHolder");
-            LoSRayCast(Vector3.zero, Vector3.right);
+            string[] losLayers = { "LoSTarget", "OpaqueLoSTarget" };
+            foreach (string layerName in losLayers)
+            {
+                int layerIndex = LayerMask.NameToLayer(layerName);
+                if (layerIndex == -1 && GameVariables.Debug) Debug.LogError($"Failed to find layer {layerName}");
+                else
+                {
+                    _layerBitMask += 1 << layerIndex;
+                }
+            }
         }
 
         public static RaycastHit2D[] LoSRayCast(Vector3 origin, Vector3 direction)
         {
-            // LoS targets are on layer 8
-            const int layerBitMask = 1 << 8;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, float.PositiveInfinity, layerBitMask);
-            if (GameVariables.Debug) DrawRay(origin, direction.normalized * GameVariables.XRes, Color.magenta, 0.5f);
+            RaycastHit2D[] hits = Physics2D.LinecastAll(origin, origin + direction * RayLength, _layerBitMask);
+            if (GameVariables.Debug)
+            {
+                Color rayColor = hits.Length > 1 ? Color.red : Color.magenta;
+                DrawRay(origin, origin + direction * RayLength, rayColor, 1f);
+            }
             _raysCast++;
             return hits;
         }
