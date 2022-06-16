@@ -9,6 +9,6 @@
   "author": "Peter Day",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^3.0.7"
+    "electron": "^15.5.5"
   }
 }
